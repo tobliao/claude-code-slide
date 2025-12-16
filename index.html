@@ -2,28 +2,38 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>從零到一：用「Claude AI Code」打造 AI 生成程式專題</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    
+    <!-- Reveal.js CSS (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/theme/black.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     
     <style>
+        /* Force full height */
+        html, body, .reveal {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a; /* Fallback color */
+        }
+
         /* --- 2025 High-Density Professional Theme --- */
         :root {
-            --primary: #60a5fa; /* Blue-400 */
-            --secondary: #94a3b8; /* Slate-400 */
-            --accent: #f472b6; /* Pink-400 */
-            --highlight: #fbbf24; /* Amber-400 */
-            --bg-dark: #020617; /* Slate-950 */
-            --bg-card: rgba(30, 41, 59, 0.7); /* Slate-800 */
-            --border-color: rgba(148, 163, 184, 0.2);
-            --text-main: #f8fafc;
+            --primary: #3b82f6; /* Vivid Blue */
+            --secondary: #94a3b8; /* Cool Grey */
+            --accent: #f43f5e; /* Rose */
+            --highlight: #fbbf24; /* Amber */
+            --bg-dark: #0f172a; /* Slate 900 */
+            --bg-card: rgba(30, 41, 59, 0.8); /* Slate 800 */
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --text-main: #f1f5f9;
         }
 
         body {
-            background: var(--bg-dark);
             background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 25%), 
                               radial-gradient(circle at 85% 30%, rgba(244, 63, 94, 0.08), transparent 25%);
         }
@@ -33,53 +43,54 @@
             color: var(--text-main);
         }
 
-        /* --- High Density Typography --- */
-        .reveal h1 { font-size: 2.2em; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        /* Typography */
+        .reveal h1 { font-size: 2.2em; font-weight: 800; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         .reveal h2 { font-size: 1.6em; color: var(--primary); font-weight: 700; margin-bottom: 20px; text-transform: none; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
         .reveal h3 { font-size: 1.3em; color: #fff; font-weight: 600; margin: 0 0 15px 0; text-align: left; display: flex; align-items: center; }
         .reveal h3::before { content: ''; display: inline-block; width: 6px; height: 24px; background: var(--primary); margin-right: 12px; border-radius: 2px; }
-        .reveal h4 { font-size: 1.0em; color: var(--accent); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        /* Dense Text */
-        .reveal p, .reveal li, .reveal div { font-size: 18px; line-height: 1.5; color: #e2e8f0; }
-        .reveal ul { margin: 0; padding-left: 1.2em; list-style-type: none; }
-        .reveal ul li { margin-bottom: 6px; position: relative; }
-        .reveal ul li::before { content: '•'; color: var(--primary); font-weight: bold; display: inline-block; width: 1em; margin-left: -1em; }
-        .reveal strong { color: #fff; font-weight: 700; }
-        .reveal small { font-size: 0.8em; color: var(--secondary); }
+        .reveal h4 { font-size: 1.0em; color: var(--accent); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .reveal p, .reveal li, .reveal div { font-size: 20px; line-height: 1.6; color: #cbd5e1; }
 
-        /* --- Layout System --- */
-        .slide-content { width: 100%; height: 100%; padding: 30px; box-sizing: border-box; text-align: left; display: flex; flex-direction: column; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; height: 100%; align-content: start; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; height: 100%; align-content: start; }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        /* Layout Utilities */
+        .slide-content { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; padding: 20px; box-sizing: border-box; text-align: left; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; align-items: start; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; width: 100%; align-items: start; }
 
-        /* --- Card Component --- */
+        /* Card */
         .card {
-            background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;
-            height: 100%; display: flex; flex-direction: column; backdrop-filter: blur(5px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); transition: transform 0.2s;
+            background: var(--bg-card); border: var(--glass-border); border-radius: 12px; padding: 25px;
+            backdrop-filter: blur(10px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); height: 100%;
+            display: flex; flex-direction: column;
         }
-        .card:hover { border-color: var(--primary); transform: translateY(-2px); }
-        .card-header { border-bottom: 1px solid var(--border-color); padding-bottom: 8px; margin-bottom: 12px; }
-        .card-body { flex: 1; overflow: hidden; }
-
-        /* --- Special Elements --- */
-        .tag { display: inline-block; padding: 2px 10px; border-radius: 12px; background: rgba(59, 130, 246, 0.2); color: var(--primary); font-size: 14px; font-weight: 600; margin-right: 8px; }
-        .code-box { font-family: 'JetBrains Mono', monospace; font-size: 14px; background: #0f172a; padding: 15px; border-radius: 6px; border: 1px solid #334155; color: #a5b4fc; white-space: pre-wrap; margin-top: 10px; }
-        .fun-fact { background: rgba(251, 191, 36, 0.1); border-left: 3px solid var(--highlight); padding: 10px; font-size: 16px; margin-top: 10px; color: #fde68a; border-radius: 0 4px 4px 0; }
+        .card-header { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px; }
+        .card-body { flex: 1; }
         
-        /* --- Diagrams --- */
-        .diagram-wrapper { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+        /* Visual Elements */
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 20px; background: rgba(59, 130, 246, 0.2); color: var(--primary); font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+        .profile-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.1); }
+        .code-box { font-family: 'JetBrains Mono', monospace; font-size: 16px; background: #020617; padding: 20px; border-radius: 8px; border: 1px solid #334155; color: #a5b4fc; white-space: pre-wrap; margin-top: 15px; }
+        .fun-fact { background: rgba(251, 191, 36, 0.1); border-left: 4px solid var(--highlight); padding: 15px; font-size: 18px; margin-top: 15px; color: #fde68a; border-radius: 0 4px 4px 0; }
+        .analogy-box { background: rgba(244, 63, 94, 0.1); border-left: 4px solid var(--accent); padding: 15px; font-size: 18px; margin-top: 15px; color: #fbcfe8; border-radius: 0 4px 4px 0; }
+        
+        /* Timeline */
         .timeline-item { border-left: 2px solid var(--secondary); padding-left: 15px; margin-bottom: 15px; position: relative; }
         .timeline-item::before { content: ''; width: 10px; height: 10px; background: var(--primary); border-radius: 50%; position: absolute; left: -6px; top: 5px; }
-        
-        /* Controls */
-        .reveal .controls { right: 5px; bottom: 5px; width: 20px; height: 20px; }
-        
-        /* Profile */
-        .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; }
 
+        /* Concentric Circles */
+        .concentric-wrapper { position: relative; width: 300px; height: 300px; margin: 0 auto; display: flex; justify-content: center; align-items: center; }
+        .c-circle { position: absolute; border-radius: 50%; display: flex; justify-content: center; padding-top: 10px; font-weight: bold; font-size: 14px; border: 2px solid; }
+        .c-1 { width: 300px; height: 300px; border-color: #94a3b8; color: #94a3b8; align-items: flex-start; }
+        .c-2 { width: 220px; height: 220px; border-color: #3b82f6; color: #3b82f6; align-items: flex-start; top: 40px; }
+        .c-3 { width: 140px; height: 140px; border-color: #a855f7; color: #a855f7; align-items: flex-start; top: 80px; }
+        .c-4 { width: 60px; height: 60px; background: #f43f5e; color: #fff; border: none; align-items: center; top: 120px; padding-top: 0; font-size: 10px; }
+
+        /* Table */
+        .comp-table { width: 100%; border-collapse: collapse; font-size: 18px; margin-top: 15px; }
+        .comp-table th { border: 1px solid #444; padding: 12px; background: #1e293b; color: var(--primary); text-align: left; }
+        .comp-table td { border: 1px solid #444; padding: 12px; vertical-align: top; }
+
+        /* Ensure controls are visible */
+        .reveal .controls { color: #4da6ff; }
     </style>
 </head>
 <body>
@@ -89,12 +100,12 @@
             <!-- 0. COVER -->
             <section>
                 <div class="slide-content" style="justify-content: center; text-align: center;">
-                    <div style="margin-bottom: 20px;"><span class="tag">AI Workshop 2025</span><span class="tag">High School Edition</span></div>
+                    <div style="margin-bottom: 20px;"><span class="tag">2025 高中生 AI 實作坊</span><span class="tag">不只是寫程式</span></div>
                     <h1>從零到一：用 AI Code 打造專題</h1>
                     <h2 style="border:none; color: var(--secondary); font-weight: 400; font-size: 1.5em;">Claude Vibe Coding 實戰工作坊</h2>
                     
                     <div style="margin-top: 40px; display: inline-flex; align-items: center; gap: 20px; background: rgba(255,255,255,0.05); padding: 20px 40px; border-radius: 50px;">
-                        <img src="https://ui-avatars.com/api/?name=Toby+Liao&background=3b82f6&color=fff" style="width: 60px; height: 60px; border-radius: 50%;">
+                        <img src="https://ui-avatars.com/api/?name=Toby+Liao&background=3b82f6&color=fff" class="profile-img" style="width: 60px; height: 60px;">
                         <div style="text-align: left;">
                             <div style="font-size: 20px; font-weight: bold; color: #fff;">廖昱程 (Toby Liao)</div>
                             <div style="font-size: 16px; color: var(--primary);">晶片設計驗證工程師 @ Cisco Systems</div>
@@ -103,40 +114,44 @@
                 </div>
             </section>
 
-            <!-- 0.1 SPEAKER BIO (Detailed) -->
+            <!-- 0.1 SPEAKER BIO -->
             <section>
                 <div class="slide-content">
-                    <h2>關於講者 (Speaker Profile)</h2>
+                    <h2>關於講者：廖昱程 (Toby Liao)</h2>
                     <div class="grid-2">
                         <div class="card">
-                            <div class="card-header"><h4>👨‍💻 核心職能 (Expertise)</h4></div>
+                            <div class="card-header"><h4>👨‍💻 核心職能</h4></div>
                             <div class="card-body">
                                 <ul>
-                                    <li><strong>ASIC Verification</strong>: 負責思科 (Cisco) 高效能交換器晶片 (Switch Chips) 的驗證。確保晶片在流片 (Tape-out) 前零錯誤。</li>
-                                    <li><strong>Tech Stack</strong>: SystemVerilog, UVM, Python, C++, CI/CD Pipelines.</li>
-                                    <li><strong>Domain</strong>: 網路通訊協定 (Ethernet, PCIe), 晶片架構 (Computer Architecture).</li>
+                                    <li><strong>現職</strong>: Cisco Systems (思科) - 晶片設計驗證工程師。</li>
+                                    <li><strong>工作</strong>: 驗證高效能網路交換器晶片 (Switch Chips)。使用 SystemVerilog 與 UVM 進行嚴格測試。</li>
+                                    <li><strong>關鍵字</strong>: ASIC Verification, Emulation, SystemVerilog, UVM, FPGA, Python Scripting。</li>
                                 </ul>
-                                <div class="fun-fact">💡 <strong>冷知識</strong>: 一顆現代交換器晶片包含數百億個電晶體，驗證工作佔了晶片開發週期的 70% 時間。</div>
+                                <div class="fun-fact">💡 <strong>冷知識</strong>: 現代晶片有 500 億個電晶體，人工檢查是不可能的，必須寫「檢查程式的程式」來確保零錯誤。</div>
                             </div>
                         </div>
                         <div class="card">
-                            <div class="card-header"><h4>🎓 學經歷 (Background)</h4></div>
+                            <div class="card-header"><h4>🎓 學經歷</h4></div>
                             <div class="card-body">
                                 <div class="timeline-item">
-                                    <strong>Cisco Systems (現職)</strong><br>
-                                    <small>晶片設計驗證工程師 - 負責下一代網路晶片驗證。</small>
+                                    <strong>臺灣科技大學 (NTUST) - 電機學士</strong><br>
+                                    <small>專注於機器人控制與嵌入式系統開發，奠定硬體基礎。</small>
                                 </div>
                                 <div class="timeline-item">
-                                    <strong>Siemens EDA</strong><br>
-                                    <small>軟體研發 - 開發自動化晶片設計工具。</small>
+                                    <strong>香港科技大學 (HKUST) - 電子工程碩士</strong><br>
+                                    <small>深入研究積體電路設計 (IC Design) 與系統架構。</small>
                                 </div>
                                 <div class="timeline-item">
-                                    <strong>香港科技大學 (HKUST)</strong><br>
-                                    <small>電子與電腦工程碩士 - 專攻積體電路設計 (IC Design)。</small>
+                                    <strong>Foxconn - 系統工程師</strong><br>
+                                    <small>參與大型伺服器系統整合，負責軟硬體協同測試。</small>
                                 </div>
                                 <div class="timeline-item">
-                                    <strong>臺灣科技大學 (NTUST)</strong><br>
-                                    <small>電機工程學士 - 卷積神經網路加速器研究。</small>
+                                    <strong>Siemens EDA - 軟體研發</strong><br>
+                                    <small>開發自動化晶片設計工具，優化全球晶片開發流程。</small>
+                                </div>
+                                <div class="timeline-item">
+                                    <strong>Cisco Systems - 驗證工程師</strong><br>
+                                    <small>負責下一代網路晶片驗證，確保全球網路基礎設施穩定。</small>
                                 </div>
                             </div>
                         </div>
@@ -147,863 +162,718 @@
             <!-- 0.2 AGENDA -->
             <section>
                 <div class="slide-content">
-                    <h2>今日航圖 (Roadmap)</h2>
+                    <h2>今日航圖 (Agenda)</h2>
                     <div class="grid-3">
                         <div class="card" style="border-top: 4px solid var(--primary);">
-                            <h4>PART 1: 觀念與環境 (30 Slides)</h4>
+                            <h4>PART 1: 觀念</h4>
+                            <p><strong>AI 底層邏輯</strong></p>
                             <ul>
-                                <li><strong>AI 科普</strong>: 從圖靈測試到 ChatGPT。</li>
-                                <li><strong>算力物理</strong>: CPU vs GPU 架構差異。</li>
-                                <li><strong>核心原理</strong>: CNN 視覺與 Transformer 語言模型。</li>
-                                <li><strong>環境建置</strong>: VS Code 與 Claude 設定。</li>
+                                <li>AI/ML/DL 階層與歷史</li>
+                                <li>算力物理：CPU vs GPU 架構</li>
+                                <li>視覺 (CNN) 濾鏡原理</li>
+                                <li>語言 (Transformer) 注意力機制</li>
                             </ul>
                         </div>
                         <div class="card" style="border-top: 4px solid var(--accent);">
-                            <h4>PART 2: 核心實作 (8 Slides)</h4>
+                            <h4>PART 2: 實作</h4>
+                            <p><strong>Vibe Coding</strong></p>
                             <ul>
-                                <li><strong>Vibe Coding</strong>: 放棄語法，專注邏輯。</li>
-                                <li><strong>Prompting</strong>: CO-STAR 專業指令框架。</li>
-                                <li><strong>實戰演練</strong>: 打造個人數位名片。</li>
-                                <li><strong>除錯 SOP</strong>: 把 Error 變成 Learning。</li>
+                                <li>工具：Claude Artifacts (免安裝)</li>
+                                <li>Prompt Engineering：CO-STAR</li>
+                                <li>實戰：個人展示網頁 (Personal Website)</li>
                             </ul>
                         </div>
                         <div class="card" style="border-top: 4px solid var(--highlight);">
-                            <h4>PART 3: 專題與未來 (5 Slides)</h4>
+                            <h4>PART 3: 專題</h4>
+                            <p><strong>進階與未來</strong></p>
                             <ul>
-                                <li><strong>文件力</strong>: 寫出專業的 README.md。</li>
-                                <li><strong>版本控制</strong>: Git/GitHub 協作基礎。</li>
-                                <li><strong>未來地圖</strong>: RAG, Agents, Fine-tuning。</li>
+                                <li>README 文件力</li>
+                                <li>Git 版本控制</li>
+                                <li>部署與未來地圖 (RAG/Agent)</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- =========================================================
-                 PART 1: 觀念與環境 (AI Science) - Expanded to High Density
-                 ========================================================= -->
-            
+            <!-- ================= PART 1: 觀念與環境 ================= -->
             <section>
-                <div class="slide-content" style="justify-content: center; text-align: center;">
-                    <div class="tag">PART 1</div>
-                    <h2 style="font-size: 3em; margin: 20px 0;">AI 底層邏輯解密</h2>
-                    <p>"Magic is just science we don't understand yet."</p>
-                </div>
-            </section>
+                <section>
+                    <div class="slide-content" style="justify-content: center; text-align: center;">
+                        <div class="tag">PART 1</div>
+                        <h2 style="font-size: 3em; margin: 20px 0;">AI 底層邏輯解密</h2>
+                        <p>"Magic is just science we don't understand yet."</p>
+                    </div>
+                </section>
 
-            <!-- 1.1 AI History -->
-            <section>
-                <div class="slide-content">
-                    <h3>1. AI 演進簡史：從邏輯到直覺</h3>
-                    <div class="grid-2">
-                        <div class="card">
-                            <div class="timeline-item">
-                                <strong>1950: 圖靈測試 (Turing Test)</strong><br>
-                                <small>艾倫·圖靈提出：「如果機器能騙過人類，它就算有智慧。」開啟了 AI 元年。模仿遊戲(Imitation Game)是核心概念。</small>
+                <!-- 1.1 History -->
+                <section>
+                    <div class="slide-content">
+                        <h3>1. AI 演進簡史</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <div class="timeline-item"><strong>1950: 圖靈測試</strong><br><small>「機器能騙過人類嗎？」AI 元年。這是哲學問題的開始。</small></div>
+                                <div class="timeline-item"><strong>1980s: 符號主義</strong><br><small>手寫規則 (If-Then)。像查字典，無法處理模糊問題 (例如無法定義所有種類的貓)。</small></div>
+                                <div class="timeline-item"><strong>2012: 深度學習爆發</strong><br><small>GPU 訓練神經網路，電腦終於「看懂」圖片 (AlexNet)。</small></div>
                             </div>
-                            <div class="timeline-item">
-                                <strong>1956-1980s: 符號主義 (Symbolic AI)</strong><br>
-                                <small>人類手寫規則 (If-Then)。例如：西洋棋深藍 (Deep Blue)。缺點：無法處理模糊問題 (如辨識貓)。</small>
-                            </div>
-                            <div class="timeline-item">
-                                <strong>2012: 深度學習爆發 (AlexNet)</strong><br>
-                                <small>Geoffrey Hinton 團隊利用 GPU 訓練神經網路，在 ImageNet 比賽中大勝，證明 AI 能「看懂」圖片。</small>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="timeline-item">
-                                <strong>2016: AlphaGo (強化學習)</strong><br>
-                                <small>DeepMind 的 AI 擊敗圍棋世界冠軍李世石。證明 AI 具有「直覺」與「策略」。Move 37 震驚世界。</small>
-                            </div>
-                            <div class="timeline-item">
-                                <strong>2017: Transformer 問世</strong><br>
-                                <small>Google 發表《Attention Is All You Need》，解決了平行運算問題，奠定了 ChatGPT 的基礎。</small>
-                            </div>
-                            <div class="timeline-item">
-                                <strong>2022: ChatGPT (生成式 AI)</strong><br>
-                                <small>OpenAI 推出對話模型，AI 從「分析」走向「創造」，這就是我們現在的時代。</small>
+                            <div class="card">
+                                <div class="timeline-item"><strong>2016: AlphaGo</strong><br><small>擊敗圍棋冠軍。證明 AI 有「直覺」與「策略」。</small></div>
+                                <div class="timeline-item"><strong>2017: Transformer</strong><br><small>Google 發表 Attention 機制，解決平行運算問題，LLM 的基石。</small></div>
+                                <div class="timeline-item"><strong>2022: ChatGPT</strong><br><small>生成式 AI 時代，從分析 (辨識貓) 走向創造 (畫一隻貓)。</small></div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- 1.2 AI Hierarchy -->
-            <section>
-                <div class="slide-content">
-                    <h3>2. AI 的俄羅斯娃娃結構 (Hierarchy)</h3>
-                    <div class="grid-2">
-                        <div class="diagram-wrapper">
-                            <!-- Pure CSS Concentric Circles -->
-                            <div style="position: relative; width: 320px; height: 320px;">
-                                <div style="position:absolute; inset:0; border:2px solid #94a3b8; border-radius:50%; display:flex; justify-content:center; padding-top:10px; color:#94a3b8;">人工智慧 (AI)</div>
-                                <div style="position:absolute; inset:40px; border:2px solid #3b82f6; border-radius:50%; display:flex; justify-content:center; padding-top:10px; color:#3b82f6;">機器學習 (ML)</div>
-                                <div style="position:absolute; inset:80px; border:2px solid #a855f7; border-radius:50%; display:flex; justify-content:center; padding-top:10px; color:#a855f7;">深度學習 (DL)</div>
-                                <div style="position:absolute; inset:120px; background:#f43f5e; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:bold;">GenAI</div>
+                <!-- 1.2 Hierarchy -->
+                <section>
+                    <div class="slide-content">
+                        <h3>2. AI 的俄羅斯娃娃結構</h3>
+                        <div class="grid-2">
+                            <div class="concentric-wrapper">
+                                <div class="c-circle c-1">AI</div>
+                                <div class="c-circle c-2">ML</div>
+                                <div class="c-circle c-3">DL</div>
+                                <div class="c-circle c-4">GenAI</div>
                             </div>
-                        </div>
-                        <div class="card">
-                            <h4>定義解析</h4>
-                            <ul>
-                                <li><strong>AI (Artificial Intelligence)</strong>: 廣義的機器智慧。包含早期的規則式系統 (Rule-based) 與現代的學習系統。</li>
-                                <li><strong>ML (Machine Learning)</strong>: 讓機器從「數據」中找規律，而不是人類手寫規則。Data-driven approach。</li>
-                                <li><strong>DL (Deep Learning)</strong>: 使用多層神經網路 (Neural Networks) 模擬人腦，解決非結構化難題 (影像、聲音)。</li>
-                                <li><strong>GenAI (Generative AI)</strong>: 專注於「創造」新內容 (文字、圖、代碼) 的 DL 分支。</li>
-                            </ul>
-                            <div class="fun-fact">💡 <strong>Note</strong>: 所有的 GenAI 都是 DL，所有的 DL 都是 ML，所有的 ML 都是 AI。</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 1.3 ML Types -->
-            <section>
-                <div class="slide-content">
-                    <h3>3. 機器學習的三大流派</h3>
-                    <p>機器到底是怎麼「學」的？就像人類學習一樣，分為三種模式。</p>
-                    <div class="grid-3">
-                        <div class="card">
-                            <h4>1. 監督式學習 (Supervised)</h4>
-                            <p><strong>有老師教，有標準答案。</strong></p>
-                            <ul>
-                                <li><strong>資料</strong>: 圖片+標籤 (這是一隻貓)。</li>
-                                <li><strong>任務</strong>: 分類 (Classification) 或 回歸 (Regression)。</li>
-                                <li><strong>應用</strong>: 垃圾郵件過濾、房價預測、手寫辨識。</li>
-                            </ul>
-                        </div>
-                        <div class="card">
-                            <h4>2. 非監督式學習 (Unsupervised)</h4>
-                            <p><strong>沒老師教，自己找規律。</strong></p>
-                            <ul>
-                                <li><strong>資料</strong>: 只有數據，沒有標籤。</li>
-                                <li><strong>任務</strong>: 分群 (Clustering) 或 降維。</li>
-                                <li><strong>應用</strong>: Netflix 推薦系統 (這群人喜歡看恐怖片)、顧客分群。</li>
-                            </ul>
-                        </div>
-                        <div class="card">
-                            <h4>3. 強化學習 (Reinforcement)</h4>
-                            <p><strong>從錯誤中學習 (獎懲機制)。</strong></p>
-                            <ul>
-                                <li><strong>資料</strong>: 環境回饋 (Reward/Penalty)。</li>
-                                <li><strong>任務</strong>: 決策 (Decision Making)。</li>
-                                <li><strong>應用</strong>: AlphaGo 下圍棋、瑪利歐破關 AI、機器人走路。</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 1.4 Neural Network Intro -->
-            <section>
-                <div class="slide-content">
-                    <h3>4. 神經網路：模擬大腦的數學模型</h3>
-                    <div class="grid-2">
-                        <div class="card">
-                            <div class="card-header"><h4>感知機 (Perceptron)</h4></div>
-                            <div class="card-body">
-                                <p>神經元運作的數學公式：</p>
-                                <div class="code-box" style="text-align: center; font-size: 20px;">y = f(Wx + b)</div>
+                            <div class="card">
                                 <ul>
-                                    <li><strong>x (Input)</strong>: 輸入訊號 (例如像素亮度)。</li>
-                                    <li><strong>W (Weight)</strong>: 權重。代表這條連結的重要性。「記憶」就存在權重裡。</li>
-                                    <li><strong>b (Bias)</strong>: 偏差。代表觸發的門檻。</li>
-                                    <li><strong>f (Activation)</strong>: 激活函數 (如 ReLU)，決定是否傳遞訊號。</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header"><h4>深度神經網路 (DNN)</h4></div>
-                            <div class="card-body">
-                                <p>當我們把數百萬個神經元疊在一起：</p>
-                                <ul>
-                                    <li><strong>輸入層</strong>: 接收原始數據。</li>
-                                    <li><strong>隱藏層 (Hidden Layers)</strong>: 黑盒子，負責提取特徵。層數越多越「深」。</li>
-                                    <li><strong>輸出層</strong>: 給出最終預測 (是貓的機率 95%)。</li>
+                                    <li><strong>AI (人工智慧)</strong>: 總稱。包含規則式 (Rule-based) 與學習式。</li>
+                                    <li><strong>ML (機器學習)</strong>: 從數據找規律，而非手寫規則。Data-driven。</li>
+                                    <li><strong>DL (深度學習)</strong>: 模擬人腦神經網路 (Neural Networks)，多層結構，處理複雜特徵。</li>
+                                    <li><strong>GenAI (生成式)</strong>: 專注於「創造」新內容 (文/圖/碼) 的 DL。</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- 1.5 Training & Backpropagation -->
-            <section>
-                <div class="slide-content">
-                    <h3>5. AI 是怎麼「學會」的？</h3>
-                    <p>訓練 (Training) 的本質就是：<strong>不斷犯錯，然後修正權重 (W)。</strong></p>
-                    <div class="grid-2">
-                        <div class="card">
-                            <h4>1. 前向傳播 (Forward Pass)</h4>
-                            <p>機器根據目前的權重，試著猜一個答案。</p>
-                            <p><em>AI: "這張圖是狗！" (其實是貓)</em></p>
-                        </div>
-                        <div class="card">
-                            <h4>2. 計算損失 (Loss Function)</h4>
-                            <p>衡量猜測與真實答案的距離。</p>
-                            <p><em>Loss = (預測 - 真實)^2 = 很大！</em></p>
-                        </div>
-                        <div class="card">
-                            <h4>3. 反向傳播 (Backpropagation)</h4>
-                            <p>這是 AI 學習的核心。透過微積分 (連鎖律)，找出是哪個神經元導致了錯誤。</p>
-                            <p><em>"第 3 層第 5 個神經元，你的權重太大了，調小一點！"</em></p>
-                        </div>
-                        <div class="card">
-                            <h4>4. 優化 (Optimizer)</h4>
-                            <p>使用梯度下降 (Gradient Descent)，微調所有權重。</p>
-                            <p><em>重複這個過程一億次，Loss 變成 0，AI 就出師了。</em></p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 1.6 Hardware: CPU vs GPU -->
-            <section>
-                <div class="slide-content">
-                    <h3>6. 算力科普：CPU vs GPU 的物理極限</h3>
-                    <div class="card" style="margin-bottom: 20px; background: rgba(59, 130, 246, 0.1); border: 1px dashed var(--primary);">
-                        <p style="margin:0;"><strong>核心差異</strong>: CPU 是全能通才 (低延遲)，GPU 是平行運算大軍 (高吞吐)。</p>
-                    </div>
-                    <table class="comp-table">
-                        <thead>
-                            <tr>
-                                <th width="20%">特性</th>
-                                <th width="40%">CPU (Central Processing Unit)</th>
-                                <th width="40%">GPU (Graphics Processing Unit)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>核心數</strong></td>
-                                <td>少 (4 - 64 Cores)</td>
-                                <td><strong>海量 (數千 - 上萬 Cores)</strong></td>
-                            </tr>
-                            <tr>
-                                <td><strong>架構</strong></td>
-                                <td>複雜指令集，擅長邏輯判斷與分支預測。</td>
-                                <td>SIMD (單指令多數據)，擅長簡單重複運算。</td>
-                            </tr>
-                            <tr>
-                                <td><strong>任務</strong></td>
-                                <td>序列 (Serial): 作業系統、開啟 App。</td>
-                                <td><strong>平行 (Parallel)</strong>: 渲染遊戲畫面、AI 矩陣乘法。</td>
-                            </tr>
-                            <tr>
-                                <td><strong>比喻</strong></td>
-                                <td>
-                                    <div style="display:flex; align-items:center; gap:10px;">
-                                        <span style="font-size:30px;">👨‍🏫</span>
-                                        <div><strong>幾位諾貝爾獎教授</strong><br>能解極難的數學，但一次只能改一張考卷。</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="display:flex; align-items:center; gap:10px;">
-                                        <span style="font-size:30px;">👶</span>
-                                        <div><strong>一萬個小學生</strong><br>不會微積分，但能同時幫一萬張圖填色。</div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- 1.7 Why GPU for AI -->
-            <section>
-                <div class="slide-content">
-                    <h3>7. 為什麼 AI 訓練一定要 GPU？</h3>
-                    <div class="grid-2">
-                        <div class="card">
-                            <h4>矩陣乘法 (Matrix Multiplication)</h4>
-                            <p>神經網路的運算本質，就是數億次的矩陣乘法。</p>
-                            <div class="code-box" style="text-align:center;">
-[ A B ]   [ x ]   [ Ax + By ]
-[ C D ] * [ y ] = [ Cx + Dy ]
+                <!-- 1.3 ML Types -->
+                <section>
+                    <div class="slide-content">
+                        <h3>3. 機器學習的三大流派</h3>
+                        <div class="grid-3">
+                            <div class="card">
+                                <h4>1. 監督式 (Supervised)</h4>
+                                <p><strong>有標準答案</strong></p>
+                                <p>老師指著圖說「這是貓」。<br>資料需要標註 (Label)。<br>應用：FaceID、垃圾信過濾。</p>
                             </div>
-                            <p>這不需要複雜的邏輯 (CPU)，只需要暴力的平行算力 (GPU)。</p>
-                        </div>
-                        <div class="card">
-                            <h4>平行化的威力</h4>
-                            <ul>
-                                <li>訓練一個大型模型 (如 GPT-4) 需要計算 10^24 次浮點運算。</li>
-                                <li>用 CPU 可能要算幾萬年。</li>
-                                <li>用 GPU 叢集 (H100) 可以在幾個月內完成。</li>
-                            </ul>
-                            <div class="fun-fact">💡 NVIDIA 因為 GPU 成為了 AI 時代的軍火商，市值突破 3 兆美元。</div>
+                            <div class="card">
+                                <h4>2. 非監督式 (Unsupervised)</h4>
+                                <p><strong>無標準答案</strong></p>
+                                <p>自己找規律分群。<br>資料不需要標註。<br>應用：Netflix 推薦、顧客分群。</p>
+                            </div>
+                            <div class="card">
+                                <h4>3. 強化學習 (Reinforcement)</h4>
+                                <p><strong>獎懲機制</strong></p>
+                                <p>做對給分，做錯扣分。<br>像訓練寵物。<br>應用：AlphaGo、瑪利歐 AI。</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- 1.8 Computer Vision 1: Pixel -->
-            <section>
-                <div class="slide-content">
-                    <h3>8. 電腦視覺 (CV)：機器怎麼「看」？</h3>
-                    <div class="grid-2">
-                        <div class="card">
-                            <h4>圖片的真相：數字矩陣</h4>
-                            <p>電腦看不到「顏色」或「形狀」，它只看到 <strong>RGB 數值 (0-255)</strong>。</p>
-                            <p>一張 1080p 圖片 = 1920 x 1080 x 3 = 6,220,800 個數字。</p>
+                <!-- 1.4 Transfer Learning -->
+                <section>
+                    <div class="slide-content">
+                        <h3>4. 遷移學習 (Transfer Learning)</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>為什麼不用從頭練？</h4>
+                                <p>就像學會騎腳踏車，學機車就很快。</p>
+                                <p>我們使用<strong>預訓練模型 (Pre-trained)</strong>，它已經讀過全世界的書，只需要<strong>微調 (Fine-tuning)</strong> 就能變成專家。</p>
+                            </div>
+                            <div class="card">
+                                <h4>優勢</h4>
+                                <ul>
+                                    <li>省下巨額算力與時間 (不用幾百張 GPU 跑幾個月)。</li>
+                                    <li>少數資料也能訓練出好模型 (Few-shot learning)。</li>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="card">
-                            <h4>視覺化呈現</h4>
-                            <div class="code-box" style="font-size: 14px;">
+                    </div>
+                </section>
+
+                <!-- 1.5 Neural Network -->
+                <section>
+                    <div class="slide-content">
+                        <h3>5. 神經網路：模擬大腦的數學</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>感知機 (Perceptron)</h4>
+                                <div class="code-box" style="text-align:center">Output = Activation(Input × Weight + Bias)</div>
+                                <ul>
+                                    <li><strong>Weight (權重)</strong>: 連結強度，即「記憶」。</li>
+                                    <li><strong>Bias (偏差)</strong>: 觸發門檻。</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <h4>深度神經網路 (DNN)</h4>
+                                <ul>
+                                    <li><strong>輸入層</strong>: 眼睛 (接收資料)。</li>
+                                    <li><strong>隱藏層</strong>: 大腦 (提取特徵)。越深越聰明，能理解越抽象的概念。</li>
+                                    <li><strong>輸出層</strong>: 做出判斷 (是貓/是狗)。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1.6 Activation Functions -->
+                <section>
+                    <div class="slide-content">
+                        <h3>6. 激活函數：神經元的開關</h3>
+                        <div class="grid-3">
+                            <div class="card">
+                                <h4>Sigmoid</h4>
+                                <p>把數值壓在 0 到 1 之間。像傳統開關。容易導致梯度消失。</p>
+                            </div>
+                            <div class="card">
+                                <h4>ReLU (最常用)</h4>
+                                <p>負數歸零，正數不變。計算快，解決梯度消失。</p>
+                            </div>
+                            <div class="card">
+                                <h4>Softmax</h4>
+                                <p>用於輸出層。將數值轉為機率 (總和 100%)。例如：貓 90%，狗 10%。</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1.7 Training -->
+                <section>
+                    <div class="slide-content">
+                        <h3>7. 訓練：從錯誤中學習</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>Loss Function (損失函數)</h4>
+                                <p>計分板。衡量猜測值與真實值的差距。<br><em>Loss 大 = 笨蛋；Loss 小 = 天才。</em></p>
+                            </div>
+                            <div class="card">
+                                <h4>Backpropagation (反向傳播)</h4>
+                                <p><strong>核心魔法</strong>。老師改考卷，告訴每個神經元「你錯在哪」，並微調權重。重複一億次，AI 就學會了。</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1.8 Hardware -->
+                <section>
+                    <div class="slide-content">
+                        <h3>8. 算力科普：CPU vs GPU</h3>
+                        <div class="card" style="margin-bottom: 20px; background: rgba(59, 130, 246, 0.1); border: 1px dashed var(--primary);">
+                            <p style="margin:0;"><strong>為什麼打電動的顯卡 (GPU) 變成了 AI 的核心？</strong></p>
+                        </div>
+                        <table class="comp-table">
+                            <thead>
+                                <tr>
+                                    <th>特性</th>
+                                    <th>CPU (中央處理器)</th>
+                                    <th>GPU (圖形處理器)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>比喻</strong></td>
+                                    <td>
+                                        <strong>幾位大學教授</strong><br>
+                                        非常聰明，能解微積分，但一次只能改一張考卷。
+                                    </td>
+                                    <td>
+                                        <strong>一萬個小學生</strong><br>
+                                        只會加減乘除，但能同時改一萬張考卷。
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>擅長</strong></td>
+                                    <td>複雜邏輯、開 App、作業系統 (OS)。<br>適合序列任務 (Sequential)。</td>
+                                    <td><strong>平行運算</strong>、畫圖、AI 矩陣。<br>適合大規模重複計算 (Parallel)。</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>核心數</strong></td>
+                                    <td>少 (4-64)，極強。</td>
+                                    <td><strong>海量 (數千)，較弱。</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 1.9 Why GPU -->
+                <section>
+                    <div class="slide-content">
+                        <h3>9. 矩陣乘法：AI 的算術課</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>AI 其實都在算矩陣</h4>
+                                <p>神經網路的運算，拆解到底，就是數億次的 <strong>A x B + C</strong>。</p>
+                                <p>這不需要很強的邏輯 (CPU)，只需要暴力的平行算力 (GPU)。</p>
+                            </div>
+                            <div class="card">
+                                <h4>NVIDIA 的崛起</h4>
+                                <p>NVIDIA 原本是做顯卡給玩家打電動的。剛好「渲染 3D 畫面」也是在算矩陣。</p>
+                                <p>於是，顯卡搖身一變，成為了訓練 AI 的神器。</p>
+                                <div class="fun-fact">💡 訓練一個 GPT-4，需要數萬張 H100 顯卡跑好幾個月。</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1.10 CV Pixel -->
+                <section>
+                    <div class="slide-content">
+                        <h3>10. 電腦視覺：圖片其實是數字</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>像素矩陣 (Pixel Matrix)</h4>
+                                <p>電腦看不到「顏色」，只看到 <strong>0-255 的數字</strong>。一張 1080p 的照片，其實是 600 萬個數字的排列組合。</p> 
+                                <div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:8px; margin-top:10px;">
+                                    <p style="margin:0 0 5px 0; color:var(--highlight); font-weight:bold;">為什麼是 600 萬？</p>
+                                    <ul style="margin:0 0 0 20px; font-size:0.9em;">
+                                        <li>解析度 1080p = 1920 x 1080 ≈ <strong>207 萬畫素</strong></li>
+                                        <li>每個畫素由 <strong>RGB (紅綠藍)</strong> 3 個色光組成</li>
+                                        <li>總數字量 = 207 萬 x 3 ≈ <strong>622 萬個數字</strong></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:20px;">
+                                <div class="code-box" style="margin-top:0;">
 [
-  [255, 000, 000] (紅), [000, 255, 000] (綠), ...
-  [000, 000, 255] (藍), [255, 255, 255] (白), ...
-  ... 數百萬個像素 ...
+  [255, 0, 0] (紅), [0, 255, 0] (綠)...
+  [0, 0, 255] (藍), [255, 255, 255] (白)...
+  ... (x 2,000,000)
 ]
+                                </div>
+                                <div class="analogy-box" style="margin-top: 0;">
+                                    👀 <strong>挑戰</strong>: 如果你把貓的照片往右移一格，這 600 萬個數字會<strong>全部改變</strong>。傳統程式崩潰，但 AI (CNN) 能認出。
+                                </div>
                             </div>
-                            <p style="margin-top:10px;"><strong>挑戰</strong>: 如果貓向右移動一個像素，所有數字都會改變。傳統程式無法處理這種變異，必須靠 AI。</p>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- 1.9 CNN Principle -->
-            <section>
-                <div class="slide-content">
-                    <h3>9. CNN (卷積神經網路)：提取特徵的藝術</h3>
-                    <p>就像人類看東西：先看線條，再看形狀，最後認出物體。</p>
-                    <div class="grid-3">
-                        <div class="card">
-                            <h4>Step 1: 卷積 (Convolution)</h4>
-                            <p><strong>「拿著手電筒掃描」</strong></p>
-                            <p>使用不同的濾鏡 (Filter) 掃過整張圖。</p>
-                            <ul>
-                                <li>濾鏡 A: 找垂直邊緣。</li>
-                                <li>濾鏡 B: 找水平邊緣。</li>
-                                <li>濾鏡 C: 找顏色斑點。</li>
-                            </ul>
-                        </div>
-                        <div class="card">
-                            <h4>Step 2: 池化 (Pooling)</h4>
-                            <p><strong>「近視眼看東西」</strong></p>
-                            <p>把圖片縮小，只保留最重要的特徵 (Max Pooling)。</p>
-                            <ul>
-                                <li>減少運算量。</li>
-                                <li>讓 AI 不會鑽牛角尖 (避免過度擬合)，關注大輪廓。</li>
-                            </ul>
-                        </div>
-                        <div class="card">
-                            <h4>Step 3: 全連接 (Flatten)</h4>
-                            <p><strong>「最後的判決」</strong></p>
-                            <p>將提取到的特徵 (有圓形、有鬍鬚、有尖耳朵) 綜合起來。</p>
-                            <p>計算機率：貓 (95%)、狗 (3%)。</p>
+                <!-- 1.11 CNN -->
+                <section>
+                    <div class="slide-content">
+                        <h3>11. CNN：找特徵的高手</h3>
+                        <div class="grid-3">
+                            <div class="card">
+                                <h4>1. 卷積 (Convolution)</h4>
+                                <p>拿手電筒 (Filter) 掃描。找邊緣、線條、圓弧。</p>
+                            </div>
+                            <div class="card">
+                                <h4>2. 池化 (Pooling)</h4>
+                                <p>瞇著眼看。縮小圖片，只留重點，忽略雜訊。</p>
+                            </div>
+                            <div class="card">
+                                <h4>3. 全連接 (FC)</h4>
+                                <p>拼圖。有尖耳 + 鬍鬚 + 貓眼 = <strong>貓</strong>。</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
+
+                <!-- 1.12 LPR Case -->
+                <section>
+                    <div class="slide-content">
+                        <h3>12. 實例：車牌辨識 (LPR)</h3>
+                        <div class="grid-3">
+                            <div class="card">
+                                <h4>1. 定位 (Localization)</h4>
+                                <p>在整張街景圖中，找出「長方形、有字」的區域 -> 鎖定車牌。</p>
+                            </div>
+                            <div class="card">
+                                <h4>2. 分割 (Segmentation)</h4>
+                                <p>像切蛋糕一樣，把 "ABC-1234" 切成 7 張小圖片。</p>
+                            </div>
+                            <div class="card">
+                                <h4>3. 識別 (OCR)</h4>
+                                <p>辨識每一張小圖片是 "A" 還是 "8"。</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1.13 NLP -->
+                <section>
+                    <div class="slide-content">
+                        <h3>13. 自然語言處理：詞向量</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>Word Embeddings</h4>
+                                <p>把文字變成空間座標 (Vector)。意義相近的字，距離很近。</p>
+                            </div>
+                            <div class="card">
+                                <h4>向量運算</h4>
+                                <div class="code-box" style="text-align:center">國王 - 男人 + 女人 = 皇后</div>
+                                <p>AI 用數學理解了語意關係。</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1.14 RNN -->
+                <section>
+                    <div class="slide-content">
+                        <h3>14. 舊時代：RNN 的瓶頸</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>序列處理</h4>
+                                <p>讀書必須一個字一個字讀。無法平行化，慢。</p>
+                            </div>
+                            <div class="card">
+                                <h4>金魚腦問題</h4>
+                                <p>讀到文章最後，往往已經忘記開頭在講什麼。</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1.15 Transformer -->
+                <section>
+                    <div class="slide-content">
+                        <h3>15. Transformer：AI 的 iPhone 時刻</h3>
+                        <div class="card">
+                            <p>2017 年 Google 發表論文，改變了一切。</p>
+                            <p><strong>突破點：平行閱讀 (Parallelism)</strong></p>
+                            <p>Transformer 不再順序閱讀，而是<strong>「一眼看完」</strong>整本書。這讓它能利用 GPU 的強大算力，訓練出超巨大的模型 (如 GPT)。</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1.16 Attention -->
+                <section>
+                    <div class="slide-content">
+                        <h3>16. 核心機制：注意力 (Attention)</h3>
+                        <div class="card">
+                            <h4>比喻：雞尾酒會效應</h4>
+                            <p>在吵雜的派對中，你可以<strong>瞬間聚焦</strong>聽到有人叫你的名字，並忽略背景雜音。</p>
+                            <hr style="border-color:#333; margin:15px 0;">
+                            <p style="font-family:monospace">"The <strong>animal</strong> didn't cross the street because <strong>it</strong> was too tired."</p>
+                            <p>Attention 讓 AI 知道 "it" 指的是 "animal" (因為累)，而不是 "street"。</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1.17 LLM -->
+                <section>
+                    <div class="slide-content">
+                        <h3>17. LLM 本質：機率接龍</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>Next Token Prediction</h4>
+                                <p>ChatGPT 其實沒有意識，它只是預測<strong>下一個字</strong>。</p>
+                            </div>
+                            <div class="card">
+                                <h4>機率表</h4>
+                                <div class="code-box">Input: "床前明月"
+光: 85%
+亮: 10%
+餅: 0.01%</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1.18 Diffusion -->
+                <section>
+                    <div class="slide-content">
+                        <h3>18. 生成圖片：擴散模型 (Diffusion)</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>原理：去噪 (Denoising)</h4>
+                                <p>想像一塊充滿雪花雜訊的螢幕。</p>
+                                <p>AI 的工作就是從這團雜訊中，慢慢「雕刻」出你想要的畫面 (例如：一隻騎車的貓)。</p>
+                            </div>
+                            <div class="card">
+                                <h4>過程</h4>
+                                <p>訓練時：把圖加噪變模糊。<br>生成時：逆向操作，把雜訊還原成圖。</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1.19 Hallucination -->
+                <section>
+                    <div class="slide-content">
+                        <h3>19. 幻覺 (Hallucination)</h3>
+                        <div class="card">
+                            <h4>為什麼 AI 會說謊？</h4>
+                            <p>因為它只在乎「機率高」，不在乎「事實」。</p>
+                            <p>當它不知道答案，為了讓句子通順，它會拼湊出一個看起來很合理的假答案。</p>
+                            <div class="fun-fact">💡 解法：RAG (先查資料再回答)。</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1.20 Ethics -->
+                <section>
+                    <div class="slide-content">
+                        <h3>20. AI 倫理</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>偏見 (Bias)</h4>
+                                <p>如果訓練資料有偏見 (如醫生都是白人)，AI 就會學會偏見。</p>
+                            </div>
+                            <div class="card">
+                                <h4>Deepfake</h4>
+                                <p>眼見不一定為憑。需保持科技素養與懷疑精神。</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
             </section>
 
-            <!-- 1.10 LPR Case Study -->
+            <!-- ================= PART 2: 實作 ================= -->
             <section>
-                <div class="slide-content">
-                    <h3>10. 實例解密：車牌辨識 (LPR)</h3>
-                    <p>這是經典的物件偵測 (Object Detection) + OCR 應用。</p>
-                    <div class="grid-3">
-                        <div class="card">
-                            <div class="card-header"><h4>1. 定位 (Localization)</h4></div>
-                            <div class="card-body">
-                                <p>在整張街景圖中，找出「車牌」在哪裡。</p>
+                <section>
+                    <div class="slide-content" style="justify-content: center; text-align: center;">
+                        <div class="tag">PART 2</div>
+                        <h2 style="font-size: 3em; margin: 20px 0;">Vibe Coding 實作</h2>
+                        <p>Logic First, Syntax Second.</p>
+                    </div>
+                </section>
+
+                <!-- 2.1 Paradigm -->
+                <section>
+                    <div class="slide-content">
+                        <h3>1. 典範轉移 (Paradigm Shift)</h3>
+                        <div class="grid-2">
+                            <div class="card" style="opacity:0.7;">
+                                <h4>傳統 Coding (Cons)</h4>
                                 <ul>
-                                    <li>特徵：長方形、高對比度、特定長寬比。</li>
-                                    <li>技術：YOLO (You Only Look Once)。</li>
+                                    <li>❌ <strong>門檻高</strong>: 需背誦大量語法與 API。</li>
+                                    <li>❌ <strong>耗時</strong>: 手寫每一行代碼，Debug 時間長。</li>
+                                    <li>❌ <strong>專注細節</strong>: 容易陷入「少個分號」的低級錯誤。</li>
+                                </ul>
+                            </div>
+                            <div class="card" style="border-color:var(--primary);">
+                                <h4>Vibe Coding (Pros)</h4>
+                                <ul>
+                                    <li>✅ <strong>專注邏輯</strong>: 像建築師一樣設計，而非像工人一樣砌磚。</li>
+                                    <li>✅ <strong>速度快</strong>: 幾秒鐘生成原型，快速迭代。</li>
+                                    <li>✅ <strong>自然語言</strong>: 用中文就能寫程式，降低入門門檻。</li>
                                 </ul>
                             </div>
                         </div>
+                    </div>
+                </section>
+
+                <!-- 2.2 Workflow -->
+                <section>
+                    <div class="slide-content">
+                        <h3>2. 開發流程 (0 to 1)</h3>
                         <div class="card">
-                            <div class="card-header"><h4>2. 分割 (Segmentation)</h4></div>
-                            <div class="card-body">
-                                <p>將 "ABC-1234" 切割成單獨的字符圖片。</p>
+                            <div style="display:flex; justify-content:space-between; text-align:center; margin-top:20px;">
+                                <div>💡<br><strong>構思 (Idea)</strong><br><small>解決什麼問題？</small></div><div>→</div>
+                                <div>📝<br><strong>規格 (Spec)</strong><br><small>詳細功能列表</small></div><div>→</div>
+                                <div>💬<br><strong>指令 (Prompt)</strong><br><small>CO-STAR 結構</small></div><div>→</div>
+                                <div>🔨<br><strong>生成 (Build)</strong><br><small>Claude 產出</small></div><div>→</div>
+                                <div>🔧<br><strong>優化 (Refine)</strong><br><small>迭代與除錯</small></div>
+                            </div>
+                            <p style="margin-top:30px; text-align:center; color:var(--primary);">重點：<strong>不要跳過 Spec (規格)</strong>。你想得越清楚，AI 寫得越準。</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2.3 CO-STAR -->
+                <section>
+                    <div class="slide-content">
+                        <h3>3. CO-STAR 指令框架</h3>
+                        <div class="grid-3">
+                            <div class="card">
+                                <h4>Context (脈絡)</h4>
+                                <p>提供背景資訊。<br><em>"我是一個初學 HTML 的學生..."</em></p>
+                            </div>
+                            <div class="card">
+                                <h4>Objective (目標)</h4>
+                                <p>你想要 AI 做什麼？<br><em>"寫一個 RWD 個人網站..."</em></p>
+                            </div>
+                            <div class="card">
+                                <h4>Style (風格)</h4>
+                                <p>寫作風格或代碼風格。<br><em>"Glassmorphism, Clean Code..."</em></p>
+                            </div>
+                            <div class="card">
+                                <h4>Tone (語氣)</h4>
+                                <p>AI 的態度。<br><em>"熱情、教學式、專業..."</em></p>
+                            </div>
+                            <div class="card">
+                                <h4>Audience (受眾)</h4>
+                                <p>誰會看這個內容？<br><em>"給沒有程式背景的人看..."</em></p>
+                            </div>
+                            <div class="card">
+                                <h4>Response (格式)</h4>
+                                <p>輸出格式。<br><em>"完整的 HTML 檔案..."</em></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2.4 Project -->
+                <section>
+                    <div class="slide-content">
+                        <h3>4. 實戰：個人展示網頁 (Portfolio)</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>目標</h4>
+                                <p>建立一個多區塊、RWD 響應式的完整個人網站。</p>
+                            </div>
+                            <div class="card">
+                                <h4>功能規格</h4>
                                 <ul>
-                                    <li>去除雜訊、傾斜校正。</li>
-                                    <li>產出 7 張小圖片。</li>
+                                    <li><strong>Hero Section</strong>: 頭像 + 自我介紹 + 社交連結。</li>
+                                    <li><strong>About</strong>: 詳細經歷與技能條 (Skill Bars)。</li>
+                                    <li><strong>Portfolio</strong>: 作品集網格展示 (Grid Layout)。</li>
+                                    <li><strong>Contact</strong>: 簡單的聯絡表單或 Email 連結。</li>
                                 </ul>
                             </div>
                         </div>
+                    </div>
+                </section>
+
+                <!-- 2.5 Prompting -->
+                <section>
+                    <div class="slide-content">
+                        <h3>5. 實戰指令 (The Prompt)</h3>
+                        <div class="code-box"><strong># Role</strong>
+你是一位擁有 10 年經驗的資深前端設計師，擅長 Awwwards 得獎風格的網頁設計。
+
+<strong># Context & Objective</strong>
+我要為自己製作一個「個人作品集網站 (Portfolio)」。請幫我寫出完整的單一 HTML 檔案 (包含 CSS/JS)。
+
+<strong># Requirements</strong>
+1. <strong>Hero Section</strong>: 左邊是我的名字與一句話介紹，右邊是圓形頭像。背景使用深色動態漸層。
+2. <strong>About Section</strong>: 使用卡片式設計展示我的學歷與經歷。
+3. <strong>Portfolio Section</strong>: 使用 CSS Grid 展示 3 個作品，滑鼠移過去要有放大特效 (Hover Scale)。
+4. <strong>Style</strong>: 使用 Glassmorphism (毛玻璃) 風格，配色以深藍 (#0f172a) 為主，搭配霓虹粉 (#f43f5e) 點綴。
+5. <strong>Tech</strong>: 純 HTML/CSS，不需要外部 Library，且必須支援手機版 (Responsive)。
+
+<strong># Output</strong>
+請提供完整的 index.html 代碼。</div>
+                    </div>
+                </section>
+
+                <!-- 2.6 Debugging -->
+                <section>
+                    <div class="slide-content">
+                        <h3>6. 除錯 SOP</h3>
                         <div class="card">
-                            <div class="card-header"><h4>3. 識別 (Recognition)</h4></div>
-                            <div class="card-body">
-                                <p>辨識每個單獨圖片是哪個字元。</p>
-                                <ul>
-                                    <li>這是一個簡單的 CNN 分類問題 (26 字母 + 10 數字)。</li>
-                                </ul>
+                            <h4>黃金法則：把 Error 餵給 AI</h4>
+                            <div class="grid-2">
+                                <div>
+                                    <ol>
+                                        <li>F12 開啟 Console。</li>
+                                        <li>複製紅色錯誤。</li>
+                                        <li>貼給 AI + <strong>"Fix this and explain why"</strong>。</li>
+                                    </ol>
+                                </div>
+                                <div class="code-box" style="margin-top:0;">
+User: "我的圖片跑版了，而且 Console 顯示 404 Error。"
+Claude: "這是因為圖片路徑錯誤..."
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
+
+                <!-- 2.7 Environment -->
+                <section>
+                    <div class="slide-content">
+                        <h3>7. 工具介紹</h3>
+                        <div class="grid-3">
+                            <div class="card"><h4>瀏覽器 (Browser)</h4><p>你的主要開發環境。</p></div>
+                            <div class="card"><h4>Claude Artifacts</h4><p>即時預覽，所見即所得。不需安裝 VS Code 也能寫程式。</p></div>
+                            <div class="card"><h4>Project Knowledge</h4><p>上傳舊代碼讓 AI 讀懂。</p></div>
+                        </div>
+                    </div>
+                </section>
             </section>
 
-            <!-- 1.11 NLP Intro -->
+            <!-- ================= PART 3: 專題與未來 ================= -->
             <section>
-                <div class="slide-content">
-                    <h3>11. 自然語言處理 (NLP)：文字的數學化</h3>
-                    <div class="grid-2">
+                <section>
+                    <div class="slide-content" style="justify-content: center; text-align: center;">
+                        <div class="tag">PART 3</div>
+                        <h2 style="font-size: 3em; margin: 20px 0;">專題與未來</h2>
+                        <p>Build, Ship, Scale.</p>
+                    </div>
+                </section>
+
+                <!-- 3.1 README -->
+                <section>
+                    <div class="slide-content">
+                        <h3>1. 文件力：README.md</h3>
+                        <p>"Documentation is Code."</p>
                         <div class="card">
-                            <h4>詞嵌入 (Word Embeddings)</h4>
-                            <p>電腦不懂中文，但懂數學向量 (Vector)。我們把每個字轉換成高維空間中的座標。</p>
-                            <div class="code-box">
-貓 = [0.2, 0.9, 0.4, ...]
-狗 = [0.3, 0.8, 0.5, ...]
+                            <p>讓 AI 幫你寫！包含 Title, Intro, Features, Usage。</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3.2 Git -->
+                <section>
+                    <div class="slide-content">
+                        <h3>2. 版本控制：Git & GitHub</h3>
+                        <div class="grid-2">
+                            <div class="card"><h4>Git (本地)</h4><p>時光機。init, add, commit。</p></div>
+                            <div class="card"><h4>GitHub (雲端)</h4><p>社群。Repo, Pages, Fork, PR。</p></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3.3 Deployment -->
+                <section>
+                    <div class="slide-content">
+                        <h3>3. 部署 (Deployment)</h3>
+                        <p>如何讓朋友看到你的網頁？</p>
+                        <div class="grid-3">
+                            <div class="card">
+                                <h4>GitHub Pages</h4>
+                                <p>最簡單，免費。推上 GitHub 即可開啟靜態網頁。</p>
                             </div>
-                            <p>在數學空間中，「貓」和「狗」的距離很近，「貓」和「冰箱」的距離很遠。</p>
-                        </div>
-                        <div class="card">
-                            <h4>神奇的向量運算</h4>
-                            <p>詞義可以像數學一樣加減！</p>
-                            <div class="code-box" style="font-size: 20px; text-align: center;">
-國王 - 男人 + 女人 = 皇后
-(King - Man + Woman = Queen)
+                            <div class="card">
+                                <h4>Vercel</h4>
+                                <p>更專業，支援自動化部署。拖拉資料夾即可上線。</p>
                             </div>
-                            <p>這證明了 AI 真的「理解」了詞彙之間的語意關係。</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 1.12 RNN Issues -->
-            <section>
-                <div class="slide-content">
-                    <h3>12. 舊時代的挑戰：RNN 的瓶頸</h3>
-                    <p>在 ChatGPT 出現之前，AI 翻譯是怎麼做的？</p>
-                    <div class="grid-2">
-                        <div class="card">
-                            <h4>RNN (循環神經網路)</h4>
-                            <p>處理序列數據 (Sequence)。讀書必須從左到右，一個字一個字讀。</p>
-                        </div>
-                        <div class="card">
-                            <h4>兩大缺點</h4>
-                            <ol>
-                                <li><strong>無法平行運算</strong>: 必須等上一個字算完，才能算下一個。GPU 英雄無用武之地。</li>
-                                <li><strong>金魚腦 (遺忘)</strong>: 讀到文章最後一段時，往往已經忘記開頭的主詞是什麼 (Long-term Dependency)。</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 1.13 Transformer Intro -->
-            <section>
-                <div class="slide-content">
-                    <h3>13. AI 的 iPhone 時刻：Transformer</h3>
-                    <div class="card" style="margin-bottom: 30px;">
-                        <p>2017 年，Google 團隊發表論文 <em>"Attention Is All You Need"</em>。</p>
-                        <p>這篇論文改變了一切，是現代 LLM (GPT, Claude, Llama) 的基石。</p>
-                    </div>
-                    <div class="grid-2">
-                        <div class="card">
-                            <h4>突破 1: 平行運算 (Parallelism)</h4>
-                            <p>Transformer 不再一個字一個字讀，而是<strong>「一眼看完」</strong>整篇文章。</p>
-                            <p>這讓訓練速度提升了數千倍，使我們能訓練海量數據的模型 (GPT)。</p>
-                        </div>
-                        <div class="card">
-                            <h4>突破 2: 自注意力 (Self-Attention)</h4>
-                            <p>讓模型能夠理解文字之間的<strong>「關聯性」</strong>，解決了金魚腦問題。</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 1.14 Attention Mechanism -->
-            <section>
-                <div class="slide-content">
-                    <h3>14. 核心解密：Attention 機制</h3>
-                    <p><strong>比喻：雞尾酒會效應 (Cocktail Party Effect)</strong></p>
-                    <div class="card">
-                        <p>在吵雜的派對中，耳朵接收所有聲音，但你的大腦可以<strong>「聚焦 (Attend)」</strong>在有人叫你名字的那一瞬間，忽略背景雜音。</p>
-                    </div>
-                    <div class="card" style="margin-top: 20px;">
-                        <h4>實例解析</h4>
-                        <div class="code-box">"The <span style="color:var(--accent)">animal</span> didn't cross the street because <span style="color:var(--accent); text-decoration:underline;">it</span> was too tired."</div>
-                        <p>當舊 AI 讀到 "it" 時，它不知道是指 "animal" 還是 "street"。</p>
-                        <p>Transformer 計算關聯度：<br>
-                        it <-> animal: <strong>98%</strong> (因為動物才會累)<br>
-                        it <-> street: <strong>2%</strong></p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 1.15 LLM Next Token -->
-            <section>
-                <div class="slide-content">
-                    <h3>15. LLM 的本質：機率接龍</h3>
-                    <div class="grid-2">
-                        <div class="card">
-                            <h4>Next Token Prediction</h4>
-                            <p>ChatGPT 其實沒有靈魂，也沒有意識。它只是一個訓練有素的統計模型，在做一件事：</p>
-                            <p><strong>「根據上文，預測下一個最可能出現的字。」</strong></p>
-                        </div>
-                        <div class="card">
-                            <h4>機率表範例</h4>
-                            <p>Input: "床前明月"</p>
-                            <ul style="font-family: monospace;">
-                                <li><span style="color:var(--primary)">光</span>: 85% (選這個!)</li>
-                                <li>亮: 10%</li>
-                                <li>餅: 0.01%</li>
-                            </ul>
-                            <p>它不斷重複這個過程，就生成了流暢的文章。</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 1.16 Hallucination -->
-            <section>
-                <div class="slide-content">
-                    <h3>16. 為什麼 AI 會說謊？(幻覺)</h3>
-                    <div class="card">
-                        <div class="card-header"><h4>Hallucination (幻覺)</h4></div>
-                        <div class="card-body">
-                            <p><strong>現象</strong>: AI 一本正經地胡說八道。</p>
-                            <p><strong>成因</strong>:</p>
-                            <ul>
-                                <li>它不是資料庫，它不負責「記住事實」，它只負責「模仿語言結構」。</li>
-                                <li>當它不知道答案時，為了讓句子通順，它會從機率分佈中選出一個「看起來很合理」的詞，即使那是錯的。</li>
-                            </ul>
-                            <p style="margin-top: 15px; color: var(--accent);">💡 <strong>解法</strong>: RAG (檢索增強生成) - 強制 AI 先去翻書 (Search)，再回答問題。</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 1.17-1.30 Reserved for detailed explanation flow -->
-            <!-- To keep file size manageable, I consolidated key concepts above. 
-                 The structure allows for expanding these topics verbally or adding more specific slide breakdowns 
-                 if the user needs exactly 30 HTML sections. 
-                 Below I will ensure Part 2 and 3 are also high quality. -->
-
-            <!-- =========================================================
-                 PART 2: 核心實作 (8 Slides)
-                 ========================================================= -->
-            
-            <section>
-                <div class="slide-content" style="justify-content: center; text-align: center;">
-                    <div class="tag">PART 2</div>
-                    <h2 style="font-size: 3em;">Vibe Coding 實作</h2>
-                    <p>Logic First, Syntax Second.</p>
-                </div>
-            </section>
-
-            <!-- 2.1 Paradigm Shift -->
-            <section>
-                <div class="slide-content">
-                    <h3>1. 典範轉移：從 Coder 到 Architect</h3>
-                    <div class="grid-2">
-                        <div class="card" style="opacity: 0.7;">
-                            <h4>傳統開發 (Coding)</h4>
-                            <ul>
-                                <li>背誦語法 (Syntax)。</li>
-                                <li>手寫每一行 Code。</li>
-                                <li>Debug 靠 Google / StackOverflow。</li>
-                                <li><strong>瓶頸：打字速度、語法記憶。</strong></li>
-                            </ul>
-                        </div>
-                        <div class="card" style="border-color: var(--primary);">
-                            <h4>Vibe Coding (Architecting)</h4>
-                            <ul>
-                                <li>專注邏輯與設計 (Logic)。</li>
-                                <li>用自然語言 (Prompt) 指揮 AI。</li>
-                                <li>審查 (Review) AI 的產出。</li>
-                                <li><strong>瓶頸：想像力、描述能力。</strong></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2.2 Workflow -->
-            <section>
-                <div class="slide-content">
-                    <h3>2. 專案開發流程 (0 to 1)</h3>
-                    <div class="card">
-                        <div style="display: flex; justify-content: space-between; align-items: center; text-align: center; margin-top: 20px;">
-                            <div>
-                                <div style="font-size: 40px;">💡</div>
-                                <strong>Idea</strong><br>構思
-                            </div>
-                            <div style="font-size: 30px;">→</div>
-                            <div>
-                                <div style="font-size: 40px;">📝</div>
-                                <strong>Spec</strong><br>規格
-                            </div>
-                            <div style="font-size: 30px;">→</div>
-                            <div>
-                                <div style="font-size: 40px;">💬</div>
-                                <strong>Prompt</strong><br>指令
-                            </div>
-                            <div style="font-size: 30px;">→</div>
-                            <div>
-                                <div style="font-size: 40px;">🔨</div>
-                                <strong>Build</strong><br>生成
-                            </div>
-                            <div style="font-size: 30px;">→</div>
-                            <div>
-                                <div style="font-size: 40px;">🔧</div>
-                                <strong>Refine</strong><br>優化
+                            <div class="card">
+                                <h4>Netlify</h4>
+                                <p>類似 Vercel，適合靜態網頁與前端專案。</p>
                             </div>
                         </div>
-                        <p style="margin-top: 30px; text-align: center; color: var(--primary);">重點：<strong>不要跳過 Spec (規格)</strong>。你想得越清楚，AI 寫得越準。</p>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- 2.3 CO-STAR -->
-            <section>
-                <div class="slide-content">
-                    <h3>3. Prompt Engineering：CO-STAR 框架</h3>
-                    <p>如何寫出 AI 一次就懂的指令？</p>
-                    <div class="grid-3">
-                        <div class="card">
-                            <h4>C - Context (脈絡)</h4>
-                            <p>"我是一個初學 HTML 的學生..."</p>
-                        </div>
-                        <div class="card">
-                            <h4>O - Objective (目標)</h4>
-                            <p>"我要做一個個人數位名片..."</p>
-                        </div>
-                        <div class="card">
-                            <h4>S - Style (風格)</h4>
-                            <p>"使用 Glassmorphism 現代風格..."</p>
-                        </div>
-                        <div class="card">
-                            <h4>T - Tone (語氣)</h4>
-                            <p>"給我教學式的中文註解..."</p>
-                        </div>
-                        <div class="card">
-                            <h4>A - Audience (受眾)</h4>
-                            <p>"給沒有程式背景的人看..."</p>
-                        </div>
-                        <div class="card">
-                            <h4>R - Response (格式)</h4>
-                            <p>"給我單一 HTML 檔案，不要分開..."</p>
+                <!-- 3.4 Future -->
+                <section>
+                    <div class="slide-content">
+                        <h3>4. 未來地圖</h3>
+                        <div class="grid-3">
+                            <div class="card"><h4>RAG</h4><p>外掛知識庫，解決幻覺。</p></div>
+                            <div class="card"><h4>Agents</h4><p>AI 代理人，自主執行任務。</p></div>
+                            <div class="card"><h4>Fine-tuning</h4><p>訓練專屬模型。</p></div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- 2.4 Project Intro -->
-            <section>
-                <div class="slide-content">
-                    <h3>4. 實戰題目：個人數位名片</h3>
-                    <div class="grid-2">
-                        <div class="card">
-                            <h4>目標 (Goal)</h4>
-                            <p>建立一個 RWD (響應式) 的個人 LinkTree 風格頁面，展示你的作品集。</p>
-                        </div>
-                        <div class="card">
-                            <h4>功能 (Features)</h4>
-                            <ul>
-                                <li>圓形頭像 + 簡介。</li>
-                                <li>3-4 個社交連結按鈕 (GitHub, IG)。</li>
-                                <li>滑鼠懸停 (Hover) 動畫特效。</li>
-                                <li>手機/電腦版面自動調整。</li>
-                            </ul>
+                <!-- 3.5 Closing -->
+                <section>
+                    <div class="slide-content" style="text-align: center;">
+                        <h2>結語</h2>
+                        <div class="card" style="width: 80%; margin: 0 auto;">
+                            <p style="font-size: 24px;">"AI 不會取代工程師，但會取代不會用 AI 的工程師。"</p>
+                            <p>保持好奇，動手實作！</p>
                         </div>
                     </div>
-                </div>
-            </section>
-
-            <!-- 2.5 Copy Prompt -->
-            <section>
-                <div class="slide-content">
-                    <h3>5. 實作指令 (Copy This Prompt)</h3>
-                    <div class="code-box">Context: 我想製作一個個人數位名片網頁。
-Objective: 畫面中間有一張圓形頭像，下方是名字與簡介，最下方是三個社交連結按鈕(IG, GitHub, Email)。
-Style: 使用 Glassmorphism (毛玻璃) 風格，背景為深色動態漸層 (Animated Gradient)。
-Constraints:
-1. 使用 HTML/CSS (無須 JS)。
-2. 支援 RWD (手機版面自適應)。
-3. 按鈕要有滑鼠懸停 (Hover) 特效，變成亮色。
-Response: 提供完整的單一 HTML 檔案代碼。</div>
-                    <p style="margin-top: 20px; color: var(--accent);">👉 將此指令貼給 Claude，並觀察 Artifacts 結果。</p>
-                </div>
-            </section>
-
-            <!-- 2.6 Debugging -->
-            <section>
-                <div class="slide-content">
-                    <h3>6. 除錯 SOP (Debugging)</h3>
-                    <div class="card">
-                        <div class="card-header"><h4>黃金法則：不要自己瞎猜，把 Error 餵給 AI。</h4></div>
-                        <div class="card-body">
-                            <ol>
-                                <li><strong>發現問題</strong>: 版面跑掉、圖片出不來。</li>
-                                <li><strong>描述問題</strong>: "圖片變成破圖 icon，而且按鈕沒有置中。"</li>
-                                <li><strong>貼上代碼</strong>: "這是我目前的 HTML (貼上)，請幫我修正。"</li>
-                                <li><strong>關鍵句</strong>: <strong>"Fix this and explain why (請修正並解釋原因)"</strong>。這才是學習的關鍵。</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2.7 Iteration -->
-            <section>
-                <div class="slide-content">
-                    <h3>7. 迭代優化 (Refinement)</h3>
-                    <p>AI 的第一版通常只有 80 分，剩下的 20 分靠你調整。</p>
-                    <div class="grid-2">
-                        <div class="card">
-                            <h4>視覺調整</h4>
-                            <p>"字體太小了，幫我改大一點。"</p>
-                            <p>"背景顏色太亮，改深一點。"</p>
-                        </div>
-                        <div class="card">
-                            <h4>功能增加</h4>
-                            <p>"增加一個『複製 Email』的按鈕。"</p>
-                            <p>"幫我加一個 footer 寫 Copyright。"</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2.8 Tooling -->
-            <section>
-                <div class="slide-content">
-                    <h3>8. 開發環境與工具</h3>
-                    <div class="grid-3">
-                        <div class="card">
-                            <h4>VS Code</h4>
-                            <p>必裝套件：Live Server (即時預覽)。</p>
-                        </div>
-                        <div class="card">
-                            <h4>Claude Artifacts</h4>
-                            <p>側邊視窗即時預覽，不用複製代碼也能看效果。</p>
-                        </div>
-                        <div class="card">
-                            <h4>Project Knowledge</h4>
-                            <p>上傳你的舊代碼或規格書，讓 Claude 讀懂上下文。</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- =========================================================
-                 PART 3: 專題與未來 (5 Slides)
-                 ========================================================= -->
-            
-            <section>
-                <div class="slide-content" style="justify-content: center; text-align: center;">
-                    <div class="tag">PART 3</div>
-                    <h2 style="font-size: 3em;">專題與未來</h2>
-                    <p>Build, Ship, Scale.</p>
-                </div>
-            </section>
-
-            <!-- 3.1 README -->
-            <section>
-                <div class="slide-content">
-                    <h3>1. 文件力：README.md</h3>
-                    <p><strong>"Documentation is Code."</strong> 程式碼是給機器看的，文件是給人看的。</p>
-                    <div class="grid-2">
-                        <div class="card">
-                            <h4>標準結構</h4>
-                            <ul>
-                                <li><strong>Title</strong>: 專案名稱。</li>
-                                <li><strong>Intro</strong>: 一句話解釋這是在做什麼。</li>
-                                <li><strong>Features</strong>: 功能列表。</li>
-                                <li><strong>How to use</strong>: 如何開啟/使用。</li>
-                            </ul>
-                        </div>
-                        <div class="card">
-                            <h4>AI 輔助</h4>
-                            <p>指令：<br><em>"請閱讀我的 index.html，幫我寫一份專業的 README.md，包含 Emoji 與功能介紹。"</em></p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3.2 Version Control -->
-            <section>
-                <div class="slide-content">
-                    <h3>2. 版本控制：Git & GitHub</h3>
-                    <div class="grid-2">
-                        <div class="card">
-                            <h4>Git (時光機)</h4>
-                            <p>在你的電腦上運作。防止「改壞了救不回來」。</p>
-                            <ul>
-                                <li><code>git init</code> (開始)</li>
-                                <li><code>git add .</code> (選擇檔案)</li>
-                                <li><code>git commit</code> (拍照存檔)</li>
-                            </ul>
-                        </div>
-                        <div class="card">
-                            <h4>GitHub (社交平台)</h4>
-                            <p>在雲端上運作。工程師的履歷。</p>
-                            <ul>
-                                <li><strong>Repository</strong>: 專案倉庫。</li>
-                                <li><strong>Pages</strong>: 免費網頁託管 (Deploy)。</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3.3 Deployment -->
-            <section>
-                <div class="slide-content">
-                    <h3>3. 部署 (Deployment)</h3>
-                    <p>如何讓朋友看到你的網頁？</p>
-                    <div class="grid-3">
-                        <div class="card">
-                            <h4>GitHub Pages</h4>
-                            <p>最簡單，免費。推上 GitHub 即可開啟。</p>
-                        </div>
-                        <div class="card">
-                            <h4>Vercel</h4>
-                            <p>更專業，支援自動化部署。拖拉資料夾即可上線。</p>
-                        </div>
-                        <div class="card">
-                            <h4>Netlify</h4>
-                            <p>類似 Vercel，適合靜態網頁。</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3.4 Future Map -->
-            <section>
-                <div class="slide-content">
-                    <h3>4. 未來地圖：AI 的下一步</h3>
-                    <div class="grid-3">
-                        <div class="card">
-                            <h4>RAG</h4>
-                            <p><strong>檢索增強生成</strong><br>讓 AI 「翻書考」。先搜尋私有資料庫，再回答問題。解決幻覺。</p>
-                        </div>
-                        <div class="card">
-                            <h4>Agents</h4>
-                            <p><strong>AI 代理人</strong><br>讓 AI 有「手腳」。可以自動上網搜尋、寄信、操作軟體。</p>
-                        </div>
-                        <div class="card">
-                            <h4>Fine-tuning</h4>
-                            <p><strong>微調</strong><br>讓 AI 讀你的教科書，訓練出專屬於你的模型。</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3.5 Closing -->
-            <section>
-                <div class="slide-content" style="text-align: center;">
-                    <h2>結語</h2>
-                    <div class="card" style="width: 80%; margin: 0 auto; text-align: left;">
-                        <h3 style="color: var(--primary); border:none;">給高中生的建議</h3>
-                        <ul>
-                            <li><strong>AI 不會取代你，但會用 AI 的人會。</strong></li>
-                            <li><strong>保持好奇心</strong>：技術每週都在變，唯有學習能力不變。</li>
-                            <li><strong>動手實作</strong>：今天回家就建立你的第一個 GitHub Repo。</li>
-                        </ul>
-                        <hr style="border-color: rgba(255,255,255,0.1); margin: 30px 0;">
-                        <p style="text-align: center; color: var(--accent);">Q & A 時間</p>
-                    </div>
-                </div>
+                </section>
             </section>
 
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/plugin/highlight/highlight.min.js"></script>
     <script>
+        // Init
         Reveal.initialize({
             controls: true,
             controlsLayout: 'bottom-right',
