@@ -142,7 +142,7 @@
                                     <small>深入研究積體電路設計 (IC Design) 與系統架構。</small>
                                 </div>
                                 <div class="timeline-item">
-                                    <strong>Foxconn - 系統工程師</strong><br>
+                                    <strong>Foxconn - 人工智能工程師</strong><br>
                                     <small>參與大型伺服器系統整合，負責軟硬體協同測試。</small>
                                 </div>
                                 <div class="timeline-item">
@@ -278,15 +278,21 @@
                         <h3>4. 遷移學習 (Transfer Learning)</h3>
                         <div class="grid-2">
                             <div class="card">
-                                <h4>為什麼不用從頭練？</h4>
-                                <p>就像學會騎腳踏車，學機車就很快。</p>
-                                <p>我們使用<strong>預訓練模型 (Pre-trained)</strong>，它已經讀過全世界的書，只需要<strong>微調 (Fine-tuning)</strong> 就能變成專家。</p>
+                                <h4>站在巨人的肩膀上</h4>
+                                <p><strong>概念</strong>: 不用從零開始 (Training from Scratch)。我們下載 Google/Meta 花幾億元訓練好的「通用大腦」，再教它一點點「專業知識」。</p>
+                                <div class="analogy-box" style="margin-top:15px; font-size: 0.9em;">
+                                    🎹 <strong>比喻</strong>: 你已經學會了鋼琴 (通用音樂能力)，現在學管風琴 (新任務) 只需要一週，而不是十年。
+                                </div>
                             </div>
                             <div class="card">
-                                <h4>優勢</h4>
-                                <ul>
-                                    <li>省下巨額算力與時間 (不用幾百張 GPU 跑幾個月)。</li>
-                                    <li>少數資料也能訓練出好模型 (Few-shot learning)。</li>
+                                <h4>經典案例</h4>
+                                <ul style="font-size: 0.9em;">
+                                    <li><strong>醫學 AI</strong>: 下載辨識萬物的 ResNet (看過貓狗車子)，微調看 <strong>X 光片</strong> → 變成癌症專家。</li>
+                                    <li><strong>程式助手</strong>: 下載讀過全網文章的 GPT (懂英文)，微調讀 <strong>GitHub 代碼</strong> → 變成 Copilot。</li>
+                                    <li><strong>優勢</strong>: 
+                                        <br>1. <strong>省錢</strong>: 不用買 1000 張顯卡。
+                                        <br>2. <strong>少資料</strong>: 只有 100 張照片也能訓練。
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -321,19 +327,25 @@
                 <!-- 1.6 Activation Functions -->
                 <section>
                     <div class="slide-content">
-                        <h3>6. 激活函數：神經元的開關</h3>
+                        <h3>6. 激活函數：賦予 AI 靈魂的開關</h3>
+                        <p style="font-size: 0.8em; margin-bottom: 20px;">如果沒有激活函數，神經網路不管有幾層，最後都只是一條無聊的直線 (線性回歸)。激活函數引入了「非線性」，讓 AI 能理解複雜的世界 (曲線)。</p>
                         <div class="grid-3">
                             <div class="card">
-                                <h4>Sigmoid</h4>
-                                <p>把數值壓在 0 到 1 之間。像傳統開關。容易導致梯度消失。</p>
+                                <h4>Sigmoid (S 形)</h4>
+                                <p style="font-size:0.8em;">將數值壓縮在 0~1 之間。像傳統電路開關，要嘛開要嘛關。</p>
+                                <p style="font-size:0.8em; color:var(--secondary);">缺點：容易造成「梯度消失」，讓深層網路學不動。</p>
+                            </div>
+                            <div class="card" style="border-top: 3px solid var(--primary);">
+                                <h4>ReLU (主流)</h4>
+                                <p style="font-size:0.8em;"><strong>負數歸 0，正數不變。</strong></p>
+                                <div class="code-box" style="padding:10px; font-size:0.7em;">if x < 0: return 0
+else: return x</div>
+                                <p style="font-size:0.8em;">簡單粗暴，計算極快！模擬生物神經元：訊號不夠強就不傳遞。</p>
                             </div>
                             <div class="card">
-                                <h4>ReLU (最常用)</h4>
-                                <p>負數歸零，正數不變。計算快，解決梯度消失。</p>
-                            </div>
-                            <div class="card">
-                                <h4>Softmax</h4>
-                                <p>用於輸出層。將數值轉為機率 (總和 100%)。例如：貓 90%，狗 10%。</p>
+                                <h4>Softmax (機率)</h4>
+                                <p style="font-size:0.8em;">用於最後一層。將一堆混亂的數字變成<strong>總和 100% 的機率</strong>。</p>
+                                <p style="font-size:0.8em; color:var(--highlight);">貓: 90%, 狗: 5%, 鳥: 5%</p>
                             </div>
                         </div>
                     </div>
