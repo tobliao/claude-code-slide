@@ -3,232 +3,2118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>從零到一：用「Claude AI Code」打造 AI 生成程式專題</title>
-    
-    <!-- Reveal.js CSS (CDN) -->
+    <title>AI 不只是聊天機器人：從生活應用到 AI 協作實作</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/reset.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/reveal.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/theme/black.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-    
+
     <style>
-        /* Force full height */
         html, body, .reveal {
             width: 100%;
             height: 100%;
             margin: 0;
             padding: 0;
-            background-color: #0f172a; /* Fallback color */
+            background-color: #0f172a;
         }
 
-        /* --- 2025 High-Density Professional Theme --- */
         :root {
-            --primary: #3b82f6; /* Vivid Blue */
-            --secondary: #94a3b8; /* Cool Grey */
-            --accent: #f43f5e; /* Rose */
-            --highlight: #fbbf24; /* Amber */
-            --bg-dark: #0f172a; /* Slate 900 */
-            --bg-card: rgba(30, 41, 59, 0.8); /* Slate 800 */
-            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-            --text-main: #f1f5f9;
+            --primary: #dce7f4;
+            --primary-strong: #f8fbff;
+            --secondary: #aab7c9;
+            --accent: #d7e2f1;
+            --highlight: #e5ecf6;
+            --success: #d6e4ef;
+            --purple: #d9e1f0;
+            --bg-dark: #09111f;
+            --bg-canvas: #0b1322;
+            --bg-card: rgba(255, 255, 255, 0.035);
+            --bg-card-strong: rgba(255, 255, 255, 0.055);
+            --bg-soft: rgba(255, 255, 255, 0.025);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+            --text-main: #f7f9fc;
+            --text-subtle: #c4cedb;
+            --text-muted: #8c9ab0;
+            --shadow-soft: none;
+            --shadow-glow: none;
         }
 
         body {
-            background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 25%), 
-                              radial-gradient(circle at 85% 30%, rgba(244, 63, 94, 0.08), transparent 25%);
+            background-image:
+                radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.04), transparent 26%),
+                radial-gradient(circle at 78% 16%, rgba(148, 163, 184, 0.06), transparent 22%),
+                linear-gradient(180deg, #09111f 0%, #0b1322 54%, #0b1424 100%);
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(circle at center, black 45%, transparent 90%);
+            opacity: 0.12;
         }
 
         .reveal {
-            font-family: 'Inter', "Microsoft JhengHei", sans-serif;
+            font-family: "Inter", "Microsoft JhengHei", sans-serif;
             color: var(--text-main);
+            letter-spacing: 0.01em;
         }
 
-        /* Typography */
-        .reveal h1 { font-size: 2.2em; font-weight: 800; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-        .reveal h2 { font-size: 1.6em; color: var(--primary); font-weight: 700; margin-bottom: 20px; text-transform: none; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        .reveal h3 { font-size: 1.3em; color: #fff; font-weight: 600; margin: 0 0 15px 0; text-align: left; display: flex; align-items: center; }
-        .reveal h3::before { content: ''; display: inline-block; width: 6px; height: 24px; background: var(--primary); margin-right: 12px; border-radius: 2px; }
-        .reveal h4 { font-size: 1.0em; color: var(--accent); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .reveal p, .reveal li, .reveal div { font-size: 20px; line-height: 1.6; color: #cbd5e1; }
+        .reveal h1 {
+            font-size: 2.7em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1;
+            text-shadow: none;
+            background: none;
+            color: var(--text-main);
+            -webkit-text-fill-color: var(--text-main);
+        }
 
-        /* Layout Utilities */
-        .slide-content { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; padding: 20px; box-sizing: border-box; text-align: left; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; align-items: start; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; width: 100%; align-items: start; }
+        .reveal h2 {
+            font-size: 1.66em;
+            color: var(--text-main);
+            font-weight: 700;
+            margin-bottom: 14px;
+            text-transform: none;
+            border-bottom: none;
+            padding-bottom: 0;
+            letter-spacing: -0.01em;
+        }
 
-        /* Card */
+        .reveal h3 {
+            font-size: 1.24em;
+            color: #fff;
+            font-weight: 650;
+            margin: 0 0 8px 0;
+            text-align: left;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        .reveal h3::before {
+            content: none;
+        }
+
+        .reveal h4 {
+            font-size: 0.96em;
+            color: #edf2f8;
+            font-weight: 650;
+            margin-bottom: 8px;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .reveal p,
+        .reveal li,
+        .reveal div {
+            font-size: 20px;
+            line-height: 1.56;
+            color: var(--text-subtle);
+        }
+
+        .slide-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 14px 18px;
+            box-sizing: border-box;
+            text-align: left;
+            position: relative;
+            max-width: 1480px;
+            margin: 0 auto;
+            gap: 16px;
+        }
+
+        .slide-content > *:first-child {
+            margin-top: 0;
+        }
+
+        .slide-content.hero-slide {
+            max-width: 1440px;
+            min-height: 100%;
+            justify-content: flex-start;
+            text-align: left;
+            gap: 18px;
+            padding-top: 42px;
+            padding-bottom: 42px;
+        }
+
+        .slide-content.hero-slide h1,
+        .slide-content.hero-slide h2,
+        .slide-content.hero-slide p,
+        .slide-content.hero-slide div {
+            text-align: left;
+        }
+
+        .slide-content.cover-slide {
+            justify-content: center;
+        }
+
+        .slide-content.cover-slide h1 {
+            font-size: 3.42em;
+            line-height: 0.98;
+            max-width: 760px;
+            margin: 0;
+        }
+
+        .slide-content.cover-slide h2 {
+            border: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+            font-size: 1.14em;
+            color: var(--text-muted);
+        }
+
+        .slide-content.section-intro-slide {
+            justify-content: flex-end;
+            padding-top: 34px;
+            padding-bottom: 52px;
+        }
+
+        .slide-content.section-intro-slide h2 {
+            border: none;
+            padding-bottom: 0;
+            margin: 0;
+            font-size: 4.2em;
+            line-height: 0.98;
+            max-width: 820px;
+            color: #ffffff;
+        }
+
+        .slide-content.section-intro-slide .section-lead {
+            margin: 0;
+            max-width: 820px;
+            font-size: 24px;
+            line-height: 1.55;
+            color: var(--text-subtle);
+        }
+
+        .slide-content.closing-slide {
+            max-width: 1360px;
+            justify-content: center;
+            padding-top: 42px;
+            padding-bottom: 42px;
+            gap: 26px;
+        }
+
+        .slide-content.closing-slide h2 {
+            border: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+            text-align: center;
+        }
+
+        .slide-content.narrow-slide {
+            max-width: 1360px;
+        }
+
+        .slide-content.compact-slide {
+            max-width: 1420px;
+        }
+
+        .slide-content.narrow-slide.compact-slide {
+            max-width: 1340px;
+        }
+
+        .slide-content.balanced-slide {
+            max-width: 1420px;
+            justify-content: flex-start;
+            gap: 16px;
+        }
+
+        .slide-content.balanced-slide > .grid-2,
+        .slide-content.balanced-slide > .grid-3,
+        .slide-content.balanced-slide > .resource-grid {
+            flex: 0 0 auto;
+        }
+
+        .slide-content.balanced-slide .card,
+        .slide-content.balanced-slide .resource-card {
+            min-height: 210px;
+        }
+
+        .slide-content.balanced-slide > h3 {
+            margin-bottom: 4px;
+        }
+
+        .slide-content.balanced-slide > .thought-box,
+        .slide-content.balanced-slide > .takeaway-bar,
+        .slide-content.balanced-slide > .question-box,
+        .slide-content.balanced-slide > .slide-link {
+            flex: 0 0 auto;
+            width: 100%;
+        }
+
+        .slide-content > .roadmap {
+            flex: 0 0 auto;
+            align-self: stretch;
+        }
+
+        .slide-content > .roadmap > .roadmap-step {
+            height: auto;
+        }
+
+        .slide-content.compact-slide .grid-2,
+        .slide-content.compact-slide .grid-3,
+        .slide-content.compact-slide .grid-4,
+        .slide-content.compact-slide .roadmap,
+        .slide-content.compact-slide .stat-grid {
+            gap: 14px;
+        }
+
+        .slide-content.compact-slide p,
+        .slide-content.compact-slide li,
+        .slide-content.compact-slide div {
+            font-size: 18.5px;
+            line-height: 1.42;
+        }
+
+        .slide-content.compact-slide .card,
+        .slide-content.compact-slide .mini-card,
+        .slide-content.compact-slide .resource-card,
+        .slide-content.compact-slide .roadmap-step,
+        .slide-content.compact-slide .stat-card {
+            padding: 14px 16px;
+        }
+
+        .slide-content.compact-slide .code-box {
+            padding: 14px 16px;
+            font-size: 14px;
+        }
+
+        .slide-content.compact-slide .image-placeholder {
+            padding: 6px;
+        }
+
+        .slide-content > .card,
+        .slide-content > .grid-2,
+        .slide-content > .grid-3,
+        .slide-content > .grid-4,
+        .slide-content > .check-grid,
+        .slide-content > .poll-grid,
+        .slide-content > .idea-grid,
+        .slide-content > .roadmap,
+        .slide-content > .resource-grid,
+        .slide-content > .stat-grid {
+            flex: 1 1 auto;
+        }
+
+        .slide-content > .grid-2 > .card,
+        .slide-content > .grid-3 > .card,
+        .slide-content > .grid-4 > .card,
+        .slide-content > .grid-2 > .mini-card,
+        .slide-content > .grid-3 > .mini-card,
+        .slide-content > .grid-4 > .mini-card,
+        .slide-content > .resource-grid > .resource-card,
+        .slide-content > .roadmap > .roadmap-step,
+        .slide-content > .stat-grid > .stat-card {
+            height: 100%;
+        }
+
+        .hero-kicker {
+            max-width: 920px;
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 22px;
+            line-height: 1.55;
+        }
+
+        .hero-speaker {
+            width: min(100%, 1100px);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            padding: 22px 26px;
+            border-radius: 22px;
+            background: rgba(17, 24, 39, 0.88);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            box-shadow: var(--shadow-soft);
+            text-align: left;
+        }
+
+        .hero-speaker .profile-img {
+            width: 72px;
+            height: 72px;
+            border: 3px solid rgba(96, 165, 250, 0.3);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
+            flex-shrink: 0;
+        }
+
+        .hero-speaker-name {
+            font-size: 31px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .hero-speaker-role {
+            font-size: 20px;
+            color: #bfdbfe;
+            margin-bottom: 10px;
+        }
+
+        .hero-speaker-note {
+            font-size: 18px;
+            color: var(--text-subtle);
+            max-width: 760px;
+        }
+
+        .hero-preview {
+            width: 100%;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .hero-preview-item {
+            text-align: left;
+            padding: 16px 0 0;
+            border-radius: 0;
+            background: transparent;
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+            min-height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .hero-preview-item strong {
+            display: block;
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .hero-preview-item span {
+            color: var(--text-subtle);
+            font-size: 15px;
+            line-height: 1.6;
+            display: block;
+        }
+
+        .cover-layout {
+            width: 100%;
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) 320px;
+            gap: 72px;
+            align-items: end;
+            flex: 1 1 auto;
+        }
+
+        .cover-main {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 20px;
+            min-height: 100%;
+            padding: 10px 0 20px;
+        }
+
+        .cover-overline {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 13px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #94a3b8;
+        }
+
+        .cover-overline::before {
+            content: "";
+            width: 46px;
+            height: 1px;
+            background: rgba(148, 163, 184, 0.4);
+            flex-shrink: 0;
+        }
+
+        .cover-title-block {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .cover-main .hero-kicker {
+            max-width: 640px;
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-subtle);
+        }
+
+        .cover-rule {
+            width: min(100%, 620px);
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.22), rgba(148, 163, 184, 0.08) 72%, transparent);
+        }
+
+        .cover-aside {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 34px;
+            min-height: 100%;
+            padding-bottom: 18px;
+        }
+
+        .cover-panel {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .cover-panel-title {
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+        }
+
+        .cover-outline-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .cover-outline-item {
+            display: grid;
+            grid-template-columns: 34px minmax(0, 1fr);
+            gap: 12px;
+            align-items: start;
+            padding: 14px 0;
+            border-top: 1px solid rgba(148, 163, 184, 0.12);
+        }
+
+        .cover-outline-item:first-child {
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .cover-outline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .cover-outline-index {
+            font-size: 13px;
+            line-height: 1;
+            color: rgba(148, 163, 184, 0.72);
+            padding-top: 4px;
+            letter-spacing: 0.12em;
+        }
+
+        .cover-outline-item strong {
+            display: block;
+            color: #fff;
+            font-size: 15px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .cover-outline-item span {
+            display: block;
+            font-size: 13.5px;
+            line-height: 1.65;
+            color: var(--text-subtle);
+        }
+
+        .cover-slide .hero-speaker {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 0;
+            border-radius: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+        }
+
+        .cover-speaker-label {
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .cover-slide .hero-speaker-name {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+
+        .cover-slide .hero-speaker-role {
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #d7deea;
+        }
+
+        .cover-slide .hero-speaker-note {
+            font-size: 13px;
+            line-height: 1.65;
+            max-width: 320px;
+        }
+
+        .cover-meta {
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .closing-slide h2 {
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .closing-layout {
+            width: 100%;
+            display: grid;
+            grid-template-columns: minmax(0, 1.6fr) 320px;
+            gap: 72px;
+            align-items: end;
+            flex: 1 1 auto;
+        }
+
+        .closing-main {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 18px;
+            min-height: 100%;
+            padding: 12px 0 18px;
+        }
+
+        .closing-overline {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 13px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .closing-overline::before {
+            content: "";
+            width: 46px;
+            height: 1px;
+            background: rgba(148, 163, 184, 0.4);
+            flex-shrink: 0;
+        }
+
+        .closing-quote-card {
+            width: min(100%, 860px);
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+        }
+
+        .closing-rule {
+            width: min(100%, 620px);
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.22), rgba(148, 163, 184, 0.08) 72%, transparent);
+        }
+
+        .closing-note {
+            max-width: 620px;
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.68;
+            color: var(--text-subtle);
+        }
+
+        .closing-side {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 18px;
+            min-height: 100%;
+            padding-bottom: 18px;
+        }
+
+        .closing-panel-title {
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+        }
+
+        .closing-summary {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        .closing-summary-item {
+            display: grid;
+            grid-template-columns: 40px minmax(0, 1fr);
+            gap: 14px;
+            align-items: start;
+            padding: 14px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .closing-summary-item:first-child {
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .closing-summary-index {
+            font-size: 15px;
+            font-weight: 650;
+            color: var(--text-muted);
+            line-height: 1;
+            letter-spacing: 0.12em;
+            padding-top: 2px;
+        }
+
+        .closing-summary-item strong {
+            display: block;
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .closing-summary-item span {
+            display: block;
+            color: var(--text-subtle);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .closing-meta {
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .closing-slide .hero-preview {
+            gap: 24px;
+        }
+
+        .section-intro-layout {
+            width: 100%;
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) 340px;
+            gap: 72px;
+            align-items: end;
+            flex: 1 1 auto;
+            min-height: 100%;
+        }
+
+        .section-intro-main {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 18px;
+            padding-bottom: 20px;
+        }
+
+        .section-intro-overline {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 13px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .section-intro-overline::before {
+            content: "";
+            width: 46px;
+            height: 1px;
+            background: rgba(148, 163, 184, 0.4);
+            flex-shrink: 0;
+        }
+
+        .section-intro-rule {
+            width: min(100%, 620px);
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.22), rgba(148, 163, 184, 0.08) 72%, transparent);
+        }
+
+        .section-intro-meta {
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .section-intro-main h2 {
+            margin: 0;
+        }
+
+        .section-intro-side {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            justify-content: flex-end;
+            padding-bottom: 20px;
+        }
+
+        .section-intro-card {
+            display: grid;
+            grid-template-columns: 40px minmax(0, 1fr);
+            gap: 14px;
+            align-items: center;
+            padding: 14px 0;
+            border-radius: 0;
+            background: transparent;
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+        }
+
+        .section-intro-card:first-child {
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .section-intro-index {
+            font-size: 15px;
+            font-weight: 650;
+            color: var(--text-muted);
+            line-height: 1;
+            letter-spacing: 0.12em;
+        }
+
+        .section-intro-card strong {
+            display: block;
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .section-intro-card span {
+            display: block;
+            color: var(--text-subtle);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .slide-content.compact-slide .fun-fact,
+        .slide-content.compact-slide .analogy-box,
+        .slide-content.compact-slide .takeaway-bar,
+        .slide-content.compact-slide .question-box,
+        .slide-content.compact-slide .thought-box,
+        .slide-content.compact-slide .news-box,
+        .slide-content.compact-slide .slide-link {
+            margin-top: 8px;
+        }
+
+        .slide-content.compact-slide .slide-image {
+            max-height: 98px;
+        }
+
+        .grid-2.asymmetric-left {
+            grid-template-columns: 0.95fr 1.05fr;
+        }
+
+        .grid-2.asymmetric-right {
+            grid-template-columns: 1.05fr 0.95fr;
+        }
+
+        .grid-3.feature-grid,
+        .resource-grid.feature-grid {
+            max-width: 1320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .grid-2,
+        .grid-3,
+        .grid-4 {
+            width: 100%;
+            display: grid;
+            align-items: start;
+        }
+
+        .grid-2 { grid-template-columns: 1fr 1fr; gap: 22px; }
+        .grid-3 { grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+        .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
+
         .card {
-            background: var(--bg-card); border: var(--glass-border); border-radius: 12px; padding: 25px;
-            backdrop-filter: blur(10px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); height: 100%;
-            display: flex; flex-direction: column;
+            background: rgba(255, 255, 255, 0.035);
+            border: var(--glass-border);
+            border-radius: 20px;
+            padding: 18px 20px;
+            backdrop-filter: none;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden;
         }
-        .card-header { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px; }
-        .card-body { flex: 1; }
-        
-        /* Visual Elements */
-        .tag { display: inline-block; padding: 4px 12px; border-radius: 20px; background: rgba(59, 130, 246, 0.2); color: var(--primary); font-size: 14px; font-weight: 600; margin-bottom: 10px; }
-        .profile-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,0.1); }
-        .code-box { font-family: 'JetBrains Mono', monospace; font-size: 16px; background: #020617; padding: 20px; border-radius: 8px; border: 1px solid #334155; color: #a5b4fc; white-space: pre-wrap; margin-top: 15px; }
-        .fun-fact { background: rgba(251, 191, 36, 0.1); border-left: 4px solid var(--highlight); padding: 15px; font-size: 18px; margin-top: 15px; color: #fde68a; border-radius: 0 4px 4px 0; }
-        .analogy-box { background: rgba(244, 63, 94, 0.1); border-left: 4px solid var(--accent); padding: 15px; font-size: 18px; margin-top: 15px; color: #fbcfe8; border-radius: 0 4px 4px 0; }
-        
-        /* Timeline */
-        .timeline-item { border-left: 2px solid var(--secondary); padding-left: 15px; margin-bottom: 15px; position: relative; }
-        .timeline-item::before { content: ''; width: 10px; height: 10px; background: var(--primary); border-radius: 50%; position: absolute; left: -6px; top: 5px; }
 
-        /* Concentric Circles */
-        .concentric-wrapper { position: relative; width: 300px; height: 300px; margin: 0 auto; display: flex; justify-content: center; align-items: center; }
-        .c-circle { position: absolute; border-radius: 50%; display: flex; justify-content: center; padding-top: 10px; font-weight: bold; font-size: 14px; border: 2px solid; }
-        .c-1 { width: 300px; height: 300px; border-color: #94a3b8; color: #94a3b8; align-items: flex-start; }
-        .c-2 { width: 220px; height: 220px; border-color: #3b82f6; color: #3b82f6; align-items: flex-start; top: 40px; }
-        .c-3 { width: 140px; height: 140px; border-color: #a855f7; color: #a855f7; align-items: flex-start; top: 80px; }
-        .c-4 { width: 60px; height: 60px; background: #f43f5e; color: #fff; border: none; align-items: center; top: 120px; padding-top: 0; font-size: 10px; }
+        .slide-content.balanced-slide .feature-grid .card,
+        .slide-content.balanced-slide .resource-grid .resource-card {
+            min-height: 220px;
+        }
 
-        /* Table */
-        .comp-table { width: 100%; border-collapse: collapse; font-size: 18px; margin-top: 15px; }
-        .comp-table th { border: 1px solid #444; padding: 12px; background: #1e293b; color: var(--primary); text-align: left; }
-        .comp-table td { border: 1px solid #444; padding: 12px; vertical-align: top; }
+        .card > *:last-child,
+        .resource-card > *:last-child,
+        .mini-card > *:last-child,
+        .roadmap-step > *:last-child,
+        .stat-card > *:last-child {
+            margin-bottom: 0;
+        }
 
-        /* Ensure controls are visible */
-        .reveal .controls { color: #4da6ff; }
+        .card::after {
+            content: none;
+        }
+
+        .card-header {
+            border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+        }
+
+        .card-body {
+            flex: 1;
+        }
+
+        .card.soft,
+        .card.accent,
+        .card.primary,
+        .card.highlight {
+            background: rgba(255, 255, 255, 0.028);
+            box-shadow: none;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 11px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.02);
+            color: #dde6f1;
+            font-size: 11px;
+            font-weight: 650;
+            margin: 0 8px 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-box {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 15px;
+            background: rgba(6, 10, 18, 0.78);
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #d9e2ef;
+            white-space: pre-wrap;
+            margin-top: 12px;
+            line-height: 1.5;
+            box-shadow: none;
+        }
+
+        .fun-fact,
+        .analogy-box,
+        .takeaway-bar,
+        .question-box,
+        .thought-box,
+        .news-box {
+            padding: 10px 12px;
+            border-radius: 12px;
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.028);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #e6edf7;
+        }
+
+        .fun-fact,
+        .analogy-box,
+        .takeaway-bar,
+        .question-box,
+        .thought-box,
+        .news-box { box-shadow: none; }
+
+        .timeline-item {
+            border-left: 1px solid rgba(148, 163, 184, 0.22);
+            padding-left: 16px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, var(--primary), #c4b5fd);
+            border-radius: 50%;
+            position: absolute;
+            left: -6px;
+            top: 6px;
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.08);
+        }
+
+        .concentric-wrapper {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .c-circle {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            border: 1px solid;
+            box-sizing: border-box;
+            background: rgba(15, 23, 42, 0.26);
+            backdrop-filter: blur(4px);
+        }
+
+        .c-1 { width: 280px; height: 280px; border-color: rgba(255, 255, 255, 0.12); color: #b8c6da; }
+        .c-2 { width: 205px; height: 205px; border-color: rgba(255, 255, 255, 0.14); color: #d5dfea; top: 38px; }
+        .c-3 { width: 130px; height: 130px; border-color: rgba(255, 255, 255, 0.16); color: #eef3f8; top: 75px; }
+        .c-4 { width: 60px; height: 60px; background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid rgba(255, 255, 255, 0.12); top: 110px; align-items: center; padding-top: 0; font-size: 10px; box-shadow: none; }
+
+        .comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 18px;
+            margin-top: 15px;
+            overflow: hidden;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        .comp-table th {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            color: #eef3f8;
+            text-align: left;
+        }
+
+        .comp-table td {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px;
+            vertical-align: top;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .speaker-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .meta-pill,
+        .stat-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 650;
+            background: rgba(255, 255, 255, 0.028);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #e3eaf4;
+            box-shadow: none;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.032);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: none;
+        }
+
+        .stat-card strong {
+            display: block;
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        .check-grid,
+        .poll-grid,
+        .idea-grid {
+            display: grid;
+            gap: 14px;
+            margin-top: 10px;
+        }
+
+        .check-grid { grid-template-columns: 1fr 1fr 1fr; }
+        .poll-grid { grid-template-columns: 1fr 1fr; }
+        .idea-grid { grid-template-columns: 1fr 1fr 1fr; }
+
+        .mini-card {
+            background: rgba(255, 255, 255, 0.032);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: none;
+        }
+
+        .mini-card strong {
+            color: #fff;
+        }
+
+        .list-tight li {
+            margin-bottom: 8px;
+        }
+
+        .big-quote {
+            font-size: 30px;
+            color: #fff;
+            line-height: 1.3;
+            letter-spacing: -0.02em;
+        }
+
+        .section-lead {
+            font-size: 21px;
+            color: var(--text-muted);
+            max-width: 920px;
+            margin: 0;
+        }
+
+        .roadmap {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-top: 14px;
+            margin-bottom: 6px;
+            align-items: stretch;
+        }
+
+        .roadmap-step {
+            background: rgba(255, 255, 255, 0.032);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px;
+            min-height: 152px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .roadmap-step .step {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 650;
+            margin-bottom: 6px;
+            letter-spacing: 0.12em;
+        }
+
+        .slide-content.roadmap-slide {
+            justify-content: flex-start;
+            gap: 16px;
+        }
+
+        .roadmap-lead {
+            max-width: 920px;
+            margin: 0;
+            color: var(--text-subtle);
+        }
+
+        .roadmap-slide .roadmap {
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+
+        .roadmap-slide .roadmap-step {
+            min-height: 126px;
+            padding: 18px 18px 16px;
+        }
+
+        .roadmap-slide .takeaway-bar {
+            margin-top: 4px;
+        }
+
+        .student-flow-slide {
+            justify-content: flex-start;
+            gap: 18px;
+        }
+
+        .student-flow-layout {
+            width: 100%;
+            display: grid;
+            grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+            gap: 26px;
+            align-items: stretch;
+        }
+
+        .student-flow-intro {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 22px 24px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .student-flow-kicker {
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .student-flow-title {
+            font-size: 28px;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            color: #fff;
+            margin: 0;
+        }
+
+        .student-flow-lead {
+            margin: 0;
+            font-size: 18px;
+            line-height: 1.7;
+            color: var(--text-subtle);
+        }
+
+        .student-flow-intro .takeaway-bar {
+            margin-top: 0;
+        }
+
+        .student-flow-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+            padding: 6px 0;
+        }
+
+        .student-flow-item {
+            display: grid;
+            grid-template-columns: 62px minmax(0, 1fr);
+            gap: 16px;
+            align-items: start;
+            padding: 16px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .student-flow-item:first-child {
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .student-flow-index {
+            font-size: 14px;
+            line-height: 1;
+            color: var(--text-muted);
+            letter-spacing: 0.14em;
+            padding-top: 4px;
+        }
+
+        .student-flow-item strong {
+            display: block;
+            color: #fff;
+            font-size: 20px;
+            margin-bottom: 6px;
+            font-weight: 650;
+        }
+
+        .student-flow-item p {
+            margin: 0;
+            font-size: 18px;
+            line-height: 1.65;
+            color: var(--text-subtle);
+        }
+
+        .image-placeholder {
+            margin-top: 10px;
+            min-height: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.025);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8px;
+            box-sizing: border-box;
+            color: #cbd5e1;
+            box-shadow: none;
+        }
+
+        .image-placeholder strong {
+            display: block;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .slide-image {
+            width: 100%;
+            max-height: 120px;
+            object-fit: contain;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+            margin-bottom: 6px;
+            background: rgba(15, 23, 42, 0.88);
+            display: block;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 12px;
+        }
+
+        .resource-card {
+            background: rgba(255, 255, 255, 0.032);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 14px;
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .feature-grid .card {
+            min-height: 170px;
+        }
+
+        .resource-card a {
+            color: #bfdbfe;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .resource-card a:hover {
+            text-decoration: underline;
+        }
+
+        .slide-link {
+            margin-top: 10px;
+            font-size: 17px;
+            color: #d4deeb;
+            background: rgba(255, 255, 255, 0.024);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 12px 16px;
+            display: inline-block;
+            box-shadow: none;
+        }
+
+        .slide-link a {
+            color: #dbeafe;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .slide-link a:hover {
+            text-decoration: underline;
+        }
+
+        .reveal .controls {
+            color: #f3f6fb;
+            filter: none;
+        }
+
+        .reveal .progress {
+            color: var(--primary);
+            height: 4px;
+        }
+
+        .reveal .slide-number {
+            right: 22px !important;
+            bottom: 18px !important;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.03);
+            color: #dde6f1;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 12px;
+            backdrop-filter: none;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2,
+            .grid-3,
+            .grid-4,
+            .check-grid,
+            .poll-grid,
+            .idea-grid,
+            .roadmap,
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reveal p,
+            .reveal li,
+            .reveal div {
+                font-size: 17px;
+            }
+        }
+
+        @media (max-height: 820px) {
+            .reveal p,
+            .reveal li,
+            .reveal div {
+                font-size: 18px;
+                line-height: 1.42;
+            }
+
+            .reveal h2 {
+                font-size: 1.38em;
+                margin-bottom: 8px;
+            }
+
+            .reveal h3 {
+                font-size: 1.08em;
+                margin-bottom: 8px;
+            }
+
+            .slide-content {
+                padding: 10px 12px;
+            }
+
+            .slide-content.narrow-slide {
+                max-width: 1280px;
+            }
+
+            .slide-content.compact-slide,
+            .slide-content.narrow-slide.compact-slide {
+                max-width: 1260px;
+            }
+
+            .card {
+                padding: 12px 14px;
+            }
+
+            .grid-2 { gap: 16px; }
+            .grid-3 { gap: 12px; }
+            .grid-4 { gap: 10px; }
+
+            .fun-fact,
+            .analogy-box,
+            .takeaway-bar,
+            .question-box,
+            .thought-box,
+            .news-box {
+                padding: 8px 10px;
+                margin-top: 8px;
+            }
+
+            .slide-image {
+                max-height: 96px;
+            }
+
+            .slide-content.compact-slide p,
+            .slide-content.compact-slide li,
+            .slide-content.compact-slide div {
+                font-size: 16px;
+            }
+
+            .slide-content.hero-slide {
+                gap: 12px;
+                padding-top: 28px;
+                padding-bottom: 30px;
+            }
+
+            .slide-content.section-intro-slide h2 {
+                font-size: 3.35em;
+            }
+
+            .slide-content.cover-slide h1 {
+                font-size: 2.72em;
+            }
+
+            .slide-content.cover-slide h2 {
+                font-size: 1.08em;
+            }
+
+            .hero-kicker,
+            .hero-speaker-note,
+            .hero-preview-item span {
+                font-size: 15px;
+            }
+
+            .hero-speaker {
+                padding: 16px 18px;
+                gap: 16px;
+            }
+
+            .hero-speaker .profile-img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .hero-speaker-name {
+                font-size: 24px;
+            }
+
+            .hero-speaker-role {
+                font-size: 16px;
+                margin-bottom: 6px;
+            }
+
+            .hero-preview {
+                gap: 12px;
+            }
+
+            .hero-preview-item {
+                padding: 12px 14px;
+                min-height: 156px;
+            }
+
+            .hero-preview-item strong {
+                font-size: 18px;
+            }
+
+            .cover-layout,
+            .section-intro-layout,
+            .closing-layout,
+            .student-flow-layout {
+                gap: 28px;
+                grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+            }
+
+            .cover-main {
+                gap: 12px;
+            }
+
+            .cover-overline {
+                font-size: 12px;
+                gap: 10px;
+            }
+
+            .cover-overline::before {
+                width: 34px;
+            }
+
+            .cover-main .hero-kicker {
+                font-size: 15px;
+                max-width: 520px;
+            }
+
+            .roadmap-slide .roadmap-step {
+                min-height: 118px;
+                padding: 16px 16px 14px;
+            }
+
+            .student-flow-intro {
+                padding: 18px 18px;
+            }
+
+            .student-flow-title {
+                font-size: 24px;
+            }
+
+            .student-flow-lead,
+            .student-flow-item p {
+                font-size: 16px;
+            }
+
+            .student-flow-item {
+                grid-template-columns: 46px minmax(0, 1fr);
+                gap: 12px;
+                padding: 12px 0;
+            }
+
+            .student-flow-item strong {
+                font-size: 17px;
+            }
+
+            .cover-slide .hero-speaker {
+                gap: 8px;
+            }
+
+            .closing-main {
+                gap: 14px;
+            }
+
+            .closing-overline {
+                font-size: 12px;
+                gap: 10px;
+            }
+
+            .closing-overline::before {
+                width: 34px;
+            }
+
+            .closing-note {
+                font-size: 15px;
+                max-width: 520px;
+            }
+
+            .closing-summary-item {
+                grid-template-columns: 34px minmax(0, 1fr);
+                gap: 12px;
+                padding: 12px 0;
+            }
+
+            .closing-summary-index {
+                font-size: 13px;
+            }
+
+            .closing-summary-item strong {
+                font-size: 14px;
+            }
+
+            .closing-summary-item span,
+            .closing-meta {
+                font-size: 13px;
+            }
+
+            .cover-slide .hero-speaker-name {
+                font-size: 18px;
+            }
+
+            .cover-slide .hero-speaker-role {
+                font-size: 13px;
+                margin-bottom: 4px;
+            }
+
+            .cover-panel-title {
+                margin-bottom: 10px;
+            }
+
+            .cover-outline-item strong {
+                font-size: 14px;
+            }
+
+            .cover-outline-index {
+                font-size: 12px;
+            }
+
+            .cover-outline-item span,
+            .cover-meta {
+                font-size: 13px;
+            }
+
+            .section-intro-card {
+                grid-template-columns: 34px minmax(0, 1fr);
+                padding: 12px 0;
+            }
+
+            .section-intro-overline {
+                font-size: 12px;
+                gap: 10px;
+            }
+
+            .section-intro-overline::before {
+                width: 34px;
+            }
+
+            .section-intro-meta {
+                font-size: 11px;
+            }
+
+            .section-intro-index {
+                font-size: 13px;
+            }
+
+            .section-intro-card strong {
+                font-size: 14px;
+            }
+
+            .section-intro-card span {
+                font-size: 13px;
+            }
+
+            .slide-content.balanced-slide .card,
+            .slide-content.balanced-slide .resource-card {
+                min-height: 170px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="reveal">
         <div class="slides">
 
-            <!-- 0. COVER -->
             <section>
-                <div class="slide-content" style="justify-content: center; text-align: center;">
-                    <div style="margin-bottom: 20px;"><span class="tag">2025 高中生 AI 實作坊</span><span class="tag">不只是寫程式</span></div>
-                    <h1>從零到一：用 AI Code 打造專題</h1>
-                    <h2 style="border:none; color: var(--secondary); font-weight: 400; font-size: 1.5em;">Claude Vibe Coding 實戰工作坊</h2>
-                    
-                    <div style="margin-top: 40px; display: inline-flex; align-items: center; gap: 20px; background: rgba(255,255,255,0.05); padding: 20px 40px; border-radius: 50px;">
-                        <img src="https://ui-avatars.com/api/?name=Toby+Liao&background=3b82f6&color=fff" class="profile-img" style="width: 60px; height: 60px;">
-                        <div style="text-align: left;">
-                            <div style="font-size: 20px; font-weight: bold; color: #fff;">廖昱程 (Toby Liao)</div>
-                            <div style="font-size: 16px; color: var(--primary);">晶片設計驗證工程師 @ Cisco Systems</div>
+                <div class="slide-content hero-slide cover-slide">
+                    <div class="cover-layout">
+                        <div class="cover-main">
+                            <div class="cover-overline">2026 彰化師範大學 人工智慧講座</div>
+                            <div class="cover-title-block">
+                                <h1>人工智能簡述：<br>善用 AI與了解 AI應用</h1>
+                                <h2 style="font-weight:400;">從生活應用、核心觀念，到和 AI 一起做專題</h2>
+                            </div>
+                            <div class="cover-rule"></div>
+                            <p class="hero-kicker">從手機解鎖、推薦演算法、語言模型，到學生也能立刻上手的 AI 專題，把抽象名詞變成你看得懂、用得到、講得出的觀念。</p>
+                        </div>
+
+                        <div class="cover-aside">
+                            <div class="hero-speaker">
+                                <div class="cover-speaker-label">Speaker</div>
+                                <div>
+                                    <div class="hero-speaker-name">廖昱程 (Toby Liao)</div>
+                                    <div class="hero-speaker-role">Cisco Systems 晶片設計驗證工程師</div>
+                                    <div class="hero-speaker-note">用跨領域工程實務視角，帶你理解 AI 怎麼進入真實世界，以及學生如何把 AI 變成可用、可展示的成果。</div>
+                                </div>
+                            </div>
+
+                            <div class="cover-panel">
+                                <div class="cover-panel-title">本次內容</div>
+                                <div class="cover-outline-list">
+                                    <div class="cover-outline-item">
+                                        <div class="cover-outline-index">01</div>
+                                        <div>
+                                            <strong>生活裡的 AI</strong>
+                                            <span>影像辨識、語音助手、推薦系統、生成式工具與真實案例。</span>
+                                        </div>
+                                    </div>
+                                    <div class="cover-outline-item">
+                                        <div class="cover-outline-index">02</div>
+                                        <div>
+                                            <strong>你需要懂的核心觀念</strong>
+                                            <span>AI、機器學習、深度學習、大語言模型、幻覺與判斷能力。</span>
+                                        </div>
+                                    </div>
+                                    <div class="cover-outline-item">
+                                        <div class="cover-outline-index">03</div>
+                                        <div>
+                                            <strong>學生可以怎麼開始</strong>
+                                            <span>用提示設計、專題製作與作品展示，把 AI 變成自己的工具。</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- 0.1 SPEAKER BIO -->
             <section>
-                <div class="slide-content">
+                <div class="slide-content narrow-slide">
                     <h2>關於講者：廖昱程 (Toby Liao)</h2>
                     <div class="grid-2">
                         <div class="card">
-                            <div class="card-header"><h4>👨‍💻 核心職能</h4></div>
+                            <div class="card-header"><h4>講師背景</h4></div>
                             <div class="card-body">
-                                <ul>
-                                    <li><strong>現職</strong>: Cisco Systems (思科) - 晶片設計驗證工程師。</li>
-                                    <li><strong>工作</strong>: 驗證高效能網路交換器晶片 (Switch Chips)。使用 SystemVerilog 與 UVM 進行嚴格測試。</li>
-                                    <li><strong>關鍵字</strong>: ASIC Verification, Emulation, SystemVerilog, UVM, FPGA, Python Scripting。</li>
+                                <p>講者具備硬體、軟體、系統整合與 AI 應用的跨領域背景，能從工程現場的角度，把抽象技術講得更貼近真實世界。</p>
+                                <ul class="list-tight">
+                                    <li><strong>現職</strong>：Cisco Systems（思科）ASIC 設計驗證工程師。</li>
+                                    <li><strong>學歷</strong>：香港科技大學電子與電腦工程碩士、國立臺灣科技大學電機工程學士。</li>
+                                    <li><strong>專長</strong>：晶片驗證、人工智慧應用、技術整合、系統開發。</li>
                                 </ul>
-                                <div class="fun-fact">💡 <strong>冷知識</strong>: 現代晶片有 500 億個電晶體，人工檢查是不可能的，必須寫「檢查程式的程式」來確保零錯誤。</div>
+                                <div class="speaker-meta">
+                                    <span class="meta-pill">ASIC Verification</span>
+                                    <span class="meta-pill">AI Applications</span>
+                                    <span class="meta-pill">System Integration</span>
+                                    <span class="meta-pill">Python / UVM</span>
+                                </div>
+                                <div class="fun-fact">冷知識：現代高階晶片可能有數百億個電晶體，幾乎不可能只靠人工檢查，因此「寫測試去驗證系統」本身就是一種高層次的工程思維。</div>
                             </div>
                         </div>
                         <div class="card">
-                            <div class="card-header"><h4>🎓 學經歷</h4></div>
+                            <div class="card-header"><h4>為什麼適合來談 AI 與應用？</h4></div>
                             <div class="card-body">
                                 <div class="timeline-item">
-                                    <strong>臺灣科技大學 (NTUST) - 電機學士</strong><br>
-                                    <small>專注於機器人控制與嵌入式系統開發，奠定硬體基礎。</small>
+                                    <strong>Foxconn 工業互聯網</strong><br>
+                                    <small>參與資料分析與視覺化系統開發，接觸大型工業資料與軟硬體整合。</small>
                                 </div>
                                 <div class="timeline-item">
-                                    <strong>香港科技大學 (HKUST) - 電子工程碩士</strong><br>
-                                    <small>深入研究積體電路設計 (IC Design) 與系統架構。</small>
+                                    <strong>Siemens EDA (Avery Design Systems)</strong><br>
+                                    <small>負責 I2C / I3C / SMBus 驗證 IP 設計與測試，協助客戶建構高效率驗證流程。</small>
                                 </div>
                                 <div class="timeline-item">
-                                    <strong>Foxconn - 人工智能工程師</strong><br>
-                                    <small>參與大型伺服器系統整合，負責軟硬體協同測試。</small>
+                                    <strong>Cisco Systems</strong><br>
+                                    <small>負責高效能網路晶片驗證，工作需要把邏輯、工具、自動化與系統觀點整合在一起。</small>
                                 </div>
-                                <div class="timeline-item">
-                                    <strong>Siemens EDA - 軟體研發</strong><br>
-                                    <small>開發自動化晶片設計工具，優化全球晶片開發流程。</small>
-                                </div>
-                                <div class="timeline-item">
-                                    <strong>Cisco Systems - 驗證工程師</strong><br>
-                                    <small>負責下一代網路晶片驗證，確保全球網路基礎設施穩定。</small>
-                                </div>
+                                <div class="takeaway-bar">這堂課的重點不是把大家變成 AI 工程師，而是讓大家理解：<strong>AI 為什麼重要、它如何進入真實世界、以及你可以怎麼善用它。</strong></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- 0.2 AGENDA -->
             <section>
-                <div class="slide-content">
+                <div class="slide-content narrow-slide">
                     <h2>今日航圖 (Agenda)</h2>
                     <div class="grid-3">
-                        <div class="card" style="border-top: 4px solid var(--primary);">
-                            <h4>PART 1: 觀念</h4>
-                            <p><strong>AI 底層邏輯</strong></p>
-                            <ul>
-                                <li>AI/ML/DL 階層與歷史</li>
-                                <li>算力物理：CPU vs GPU 架構</li>
-                                <li>視覺 (CNN) 濾鏡原理</li>
-                                <li>語言 (Transformer) 注意力機制</li>
+                        <div class="card primary">
+                            <h4>PART 1</h4>
+                            <p><strong>AI 在你身邊</strong></p>
+                            <ul class="list-tight">
+                                <li>影像處理、語言理解、推薦系統</li>
+                                <li>醫療應用、生成式 AI、教育案例</li>
+                                <li>用生活情境先建立感覺</li>
                             </ul>
                         </div>
-                        <div class="card" style="border-top: 4px solid var(--accent);">
-                            <h4>PART 2: 實作</h4>
-                            <p><strong>Vibe Coding</strong></p>
-                            <ul>
-                                <li>工具：Claude Artifacts (免安裝)</li>
-                                <li>Prompt Engineering：CO-STAR</li>
-                                <li>實戰：個人展示網頁 (Personal Website)</li>
+                        <div class="card accent">
+                            <h4>PART 2</h4>
+                            <p><strong>AI 怎麼做到的</strong></p>
+                            <ul class="list-tight">
+                                <li>AI / ML / DL / GenAI 關係</li>
+                                <li>為什麼 GPU 很重要</li>
+                                <li>電腦怎麼看圖、怎麼讀字、怎麼亂講</li>
                             </ul>
                         </div>
-                        <div class="card" style="border-top: 4px solid var(--highlight);">
-                            <h4>PART 3: 專題</h4>
-                            <p><strong>進階與未來</strong></p>
-                            <ul>
-                                <li>README 文件力</li>
-                                <li>Git 版本控制</li>
-                                <li>部署與未來地圖 (RAG/Agent)</li>
+                        <div class="card highlight">
+                            <h4>PART 3</h4>
+                            <p><strong>和 AI 一起做事</strong></p>
+                            <ul class="list-tight">
+                                <li>Vibe Coding 與提示設計</li>
+                                <li>學生可立即上手的小專題</li>
+                                <li>如何驗證、部署、延伸成作品</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- ================= PART 1: 觀念與環境 ================= -->
             <section>
                 <section>
-                    <div class="slide-content" style="justify-content: center; text-align: center;">
-                        <div class="tag">PART 1</div>
-                        <h2 style="font-size: 3em; margin: 20px 0;">AI 底層邏輯解密</h2>
-                        <p>"Magic is just science we don't understand yet."</p>
-                    </div>
-                </section>
-
-                <!-- 1.1 History -->
-                <section>
-                    <div class="slide-content">
-                        <h3>1. AI 演進簡史</h3>
-                        <div class="grid-2">
-                            <div class="card">
-                                <div class="timeline-item"><strong>1950: 圖靈測試</strong><br><small>「機器能騙過人類嗎？」AI 元年。這是哲學問題的開始。</small></div>
-                                <div class="timeline-item"><strong>1980s: 符號主義</strong><br><small>手寫規則 (If-Then)。像查字典，無法處理模糊問題 (例如無法定義所有種類的貓)。</small></div>
-                                <div class="timeline-item"><strong>2012: 深度學習爆發</strong><br><small>GPU 訓練神經網路，電腦終於「看懂」圖片 (AlexNet)。</small></div>
+                    <div class="slide-content hero-slide section-intro-slide">
+                        <div class="section-intro-layout">
+                            <div class="section-intro-main">
+                                <div class="section-intro-overline">PART 1</div>
+                                <h2>AI 在你身邊</h2>
+                                <p class="section-lead">先不要急著背名詞。先看懂 AI 已經在哪裡出現，為什麼它會影響你的學習、娛樂、生活與未來工作。</p>
+                                <div class="section-intro-rule"></div>
+                                <div class="section-intro-meta">Vision / Language / Recommendation</div>
                             </div>
-                            <div class="card">
-                                <div class="timeline-item"><strong>2016: AlphaGo</strong><br><small>擊敗圍棋冠軍。證明 AI 有「直覺」與「策略」。</small></div>
-                                <div class="timeline-item"><strong>2017: Transformer</strong><br><small>Google 發表 Attention 機制，解決平行運算問題，LLM 的基石。</small></div>
-                                <div class="timeline-item"><strong>2022: ChatGPT</strong><br><small>生成式 AI 時代，從分析 (辨識貓) 走向創造 (畫一隻貓)。</small></div>
+                            <div class="section-intro-side">
+                                <div class="section-intro-card">
+                                    <div class="section-intro-index">01</div>
+                                    <div>
+                                        <strong>看得到</strong>
+                                        <span>影像辨識、人臉解鎖、醫療影像與生成圖片。</span>
+                                    </div>
+                                </div>
+                                <div class="section-intro-card">
+                                    <div class="section-intro-index">02</div>
+                                    <div>
+                                        <strong>聽得懂</strong>
+                                        <span>翻譯、摘要、聊天機器人與語音轉文字工具。</span>
+                                    </div>
+                                </div>
+                                <div class="section-intro-card">
+                                    <div class="section-intro-index">03</div>
+                                    <div>
+                                        <strong>影響你</strong>
+                                        <span>推薦系統、教學現場與生成式 AI 正在改變學習方式。</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- 1.2 Hierarchy -->
                 <section>
-                    <div class="slide-content">
-                        <h3>2. AI 的俄羅斯娃娃結構</h3>
+                    <div class="slide-content compact-slide">
+                        <h3>1. 你今天其實已經用了多少 AI？</h3>
+                        <div class="card">
+                            <p>很多同學會以為「AI = ChatGPT」，但事實上，你從早到晚都可能在和 AI 互動。</p>
+                            <div class="check-grid">
+                                <div class="mini-card"><strong>手機解鎖</strong><br>人臉辨識幫你判斷是不是本人。</div>
+                                <div class="mini-card"><strong>YouTube / TikTok</strong><br>推薦系統猜你下一支會想看什麼。</div>
+                                <div class="mini-card"><strong>Google 翻譯</strong><br>把語言、圖片、聲音轉成你看得懂的內容。</div>
+                                <div class="mini-card"><strong>地圖導航</strong><br>預測壅塞、推估最快路線。</div>
+                                <div class="mini-card"><strong>購物平台</strong><br>猜你可能想買什麼，甚至幫你排序商品。</div>
+                                <div class="mini-card"><strong>生成式工具</strong><br>幫你寫文案、做圖、整理筆記、修程式。</div>
+                            </div>
+                            <div class="question-box">互動提問：如果今天所有 AI 都消失，你覺得你最先不習慣的是哪一項？為什麼？</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content compact-slide">
+                        <h3>2. 影像處理：AI 如何「看」世界</h3>
+                        <div class="grid-2 asymmetric-right">
+                            <div class="card">
+                                <h4>影像處理的三件事</h4>
+                                <p>影像處理是從圖像中取得資訊的技術，應用範圍非常廣，從交通、治安、娛樂到醫療都看得到。</p>
+                                <div class="stat-grid">
+                                    <div class="stat-card">
+                                        <strong>分類</strong>
+                                        判斷這是什麼類別，例如貓、狗、口罩、人臉。
+                                    </div>
+                                    <div class="stat-card">
+                                        <strong>偵測</strong>
+                                        不只知道有什麼，還要找出它在哪裡。
+                                    </div>
+                                    <div class="stat-card">
+                                        <strong>切割</strong>
+                                        精細圈出邊界，讓系統知道範圍與形狀。
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <h4>學生最容易有感的例子</h4>
+                                <ul class="list-tight">
+                                    <li><strong>車牌辨識</strong>：停車場、社區出入口、國道收費。</li>
+                                    <li><strong>人臉辨識</strong>：手機解鎖、相簿分類、門禁系統。</li>
+                                    <li><strong>情緒辨識</strong>：客服、互動裝置、研究實驗。</li>
+                                    <li><strong>醫療影像</strong>：從 X 光、眼底影像、腦部掃描中輔助醫師判讀。</li>
+                                </ul>
+                                <div class="analogy-box">你可以把影像 AI 想成一位「永遠不喊累的看片助教」：它不一定比專家厲害，但很適合先幫忙大量篩查。</div>
+                                <div class="image-placeholder">
+                                    <div>
+                                        <img class="slide-image" src="https://images.unsplash.com/photo-1483070421852-a142ce0a385d?auto=format&fit=crop&w=1200&q=80" alt="手機辨識情境示意圖">
+                                        <strong>生活裡常見的辨識情境</strong>
+                                        從手機解鎖到門禁系統，很多互動背後都藏著影像辨識。
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content narrow-slide">
+                        <h3>3. 影像應用案例：從車牌到醫療</h3>
+                        <div class="grid-3">
+                            <div class="card">
+                                <h4>車牌辨識</h4>
+                                <p>先找出車牌區域，再切開字元，最後逐字辨識。這其實就是「定位 + 分割 + 辨識」的組合。</p>
+                            </div>
+                            <div class="card">
+                                <h4>人臉辨識</h4>
+                                <p>系統會學習臉部特徵點，而不是把整張照片死背起來，所以換角度、換光線還是能勉強認出你。</p>
+                            </div>
+                            <div class="card">
+                                <h4>醫療影像</h4>
+                                <p>像糖尿病視網膜病變、腫瘤偵測這些場景，都很適合 AI 先做大量篩查；現實中，像 Acer Medical 這類健康科技團隊也已將 AI 導入大量臨床場域，官方網站公開資訊顯示已有超過 300 個臨床實作點。</p>
+                            </div>
+                        </div>
+                        <div class="news-box">醫療 AI 的價值常常不是「取代醫師」，而是<strong>提早提醒、提高效率、降低遺漏風險</strong>。</div>
+                        <div class="thought-box">深度思考：如果 AI 誤判一張影像，責任應該算在誰身上？醫師、系統公司，還是使用流程？</div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content compact-slide">
+                        <h3>4. 自然語言處理：讓電腦開始聽說讀寫</h3>
+                        <div class="grid-2 asymmetric-left">
+                            <div class="card">
+                                <h4>自然語言處理在做什麼？</h4>
+                                <p>自然語言處理包含<strong>認知、理解、生成</strong>三個面向。簡單說，就是讓電腦能把人類語言變成它能處理的形式，再輸出可讀的答案。</p>
+                                <ul class="list-tight">
+                                    <li><strong>文本轉文本</strong>：翻譯、摘要、改寫。</li>
+                                    <li><strong>語音轉文字</strong>：字幕、會議記錄、語音助理。</li>
+                                    <li><strong>影像轉文字</strong>：看圖說故事、讀取圖片中的文字。</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <h4>常見應用</h4>
+                                <ul class="list-tight">
+                                    <li><strong>機器翻譯</strong>：從單字轉換走向上下文理解。</li>
+                                    <li><strong>聊天機器人</strong>：回答問題、引導流程、協助客服。</li>
+                                    <li><strong>學習助手</strong>：整理筆記、解釋術語、出題練習。</li>
+                                </ul>
+                                <div class="question-box">互動提問：你比較願意把 AI 當成「查資料工具」還是「對話型助教」？兩者差別在哪裡？</div>
+                                <div class="image-placeholder">
+                                    <div>
+                                        <img class="slide-image" src="https://images.unsplash.com/photo-1745674684468-b9fc392fda3f?auto=format&fit=crop&w=1200&q=80" alt="聊天機器人與文字互動示意圖">
+                                        <strong>電腦開始看懂你的語言</strong>
+                                        從翻譯、摘要到聊天助手，都是自然語言處理的不同表現。
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-link">如果你想看一個很貼近日常的應用例子：
+                            <a href="https://www.youtube.com/watch?v=YHpITfhj6zI" target="_blank" rel="noopener noreferrer">AI 錄音神技！秒變第二大腦：語音轉文字怎麼用</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content narrow-slide">
+                        <h3>5. 推薦系統：你在選內容，內容也在選你</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>推薦系統在做什麼？</h4>
+                                <p>推薦系統的核心任務是預測使用者偏好。它不一定真的「懂你」，但會從你的點擊、停留時間、收藏、跳過行為去推測。</p>
+                                <ul class="list-tight">
+                                    <li>YouTube / Netflix：猜你下一支會不會想看。</li>
+                                    <li>Spotify：猜你哪種音樂最對味。</li>
+                                    <li>電商平台：猜你喜歡什麼風格、什麼價位。</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <h4>從穿搭推薦延伸</h4>
+                                <p>把穿搭推薦放到學生生活情境，就很容易理解：</p>
+                                <ul class="list-tight">
+                                    <li>拍一張全身照，系統推薦穿搭。</li>
+                                    <li>看你常買什麼，平台自動推送類似商品。</li>
+                                    <li>你以為你只是滑手機，實際上系統正在收集你的偏好。</li>
+                                </ul>
+                                <div class="thought-box">深度思考：推薦系統讓生活更方便，但也可能讓我們越來越只看到自己熟悉的世界。</div>
+                            </div>
+                        </div>
+                        <div class="slide-link">如果你想用很生活化的方式感受推薦演算法：
+                            <a href="https://www.youtube.com/watch?v=XS2HmBvpR0c" target="_blank" rel="noopener noreferrer">YouTube 為什麼不推薦你的影片？</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content narrow-slide">
+                        <h3>6. AI 進入教室：這不是未來式，是現在進行式</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>台灣近期例子</h4>
+                                <div class="news-box">教育部近年發布 AI 學習資源與課程推動方案，也開始把生成式 AI 納入數位學習支援情境，並提出像 TAICA 這類 AI 學習聯盟概念。</div>
+                                <div class="news-box">台北科技大學自 2024 學年度起，讓超過 1,500 名大一新生需要修習 AI 相關學習內容，代表 AI 素養正在變成通識能力。</div>
+                                <p>這代表一件事：<strong>AI 素養已經不只是資訊科學生的事情，而是跨領域基本能力。</strong></p>
+                            </div>
+                            <div class="card">
+                                <h4>你可以怎麼用？</h4>
+                                <ul class="list-tight">
+                                    <li>把難懂的課文改寫成比較好懂的版本。</li>
+                                    <li>請 AI 幫你做重點整理，但自己再交叉驗證。</li>
+                                    <li>練英文口說、面試問答、報告提綱。</li>
+                                    <li>做一份屬於自己的複習包，而不是直接複製答案。</li>
+                                </ul>
+                                <div class="question-box">互動提問：如果 AI 可以幫你寫報告，那老師以後更應該考什麼？背答案，還是判斷力？</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content compact-slide">
+                        <h3>7. 生成式 AI：從「辨識」走向「創造」</h3>
+                        <div class="grid-3">
+                            <div class="card">
+                                <h4>文字生成</h4>
+                                <p>聊天、摘要、寫講稿、寫文案、做表格、整理筆記。</p>
+                            </div>
+                            <div class="card">
+                                <h4>影像生成</h4>
+                                <p>現在很常見的情境是輸入一句話，系統幫你生成海報、角色圖、社群貼文插圖或視覺草稿。</p>
+                            </div>
+                            <div class="card">
+                                <h4>跨模態生成</h4>
+                                <p>像聲音轉影像、圖片轉文字、文字轉影片這類型態，代表 AI 不只會處理一種資料形式。</p>
+                            </div>
+                        </div>
+                        <div class="code-box">範例 prompt：
+請幫我生成一張「校園科技展海報」，主題是 AI 與未來學習，
+風格要年輕、有科技感，主色是深藍與亮粉色。</div>
+                        <div class="takeaway-bar">生成式 AI 最強的地方，不是一次給你完美答案，而是讓你可以<strong>快速試很多版本</strong>。</div>
+                        <div class="image-placeholder">
+                            <div>
+                                <img class="slide-image" src="https://images.unsplash.com/photo-1745674684587-bc050b00ad7a?auto=format&fit=crop&w=1200&q=80" alt="生成式 AI 提示輸入示意圖">
+                                <strong>一句話，換出很多版本</strong>
+                                生成式 AI 的強項不是一次完美，而是讓你快速試做、比較、修改。
+                            </div>
+                        </div>
+                        <div class="slide-link">想先看一支短的科普影片：
+                            <a href="https://www.youtube.com/watch?v=vXPUcxePUwg" target="_blank" rel="noopener noreferrer">【生成式AI】什麼是 AIGC? 它是否會引發勞動力的又一次大遷徙?（2分鐘）</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content narrow-slide">
+                        <h3>8. 快速互動：哪些任務適合交給 AI？</h3>
+                        <div class="poll-grid">
+                            <div class="mini-card"><strong>情境 A</strong><br>請 AI 幫你把生物課筆記整理成重點表格。<br><br><em>適合 / 不適合？為什麼？</em></div>
+                            <div class="mini-card"><strong>情境 B</strong><br>請 AI 直接幫你完成整份心得，自己完全不看。<br><br><em>適合 / 不適合？為什麼？</em></div>
+                            <div class="mini-card"><strong>情境 C</strong><br>請 AI 提供報告大綱，再由你補案例與觀點。<br><br><em>哪一段最需要你親自判斷？</em></div>
+                            <div class="mini-card"><strong>情境 D</strong><br>請 AI 判讀醫療或法律內容，直接照做。<br><br><em>風險在哪裡？</em></div>
+                        </div>
+                        <div class="thought-box">結論不一定只有一個，但你要開始建立一種習慣：<strong>AI 可以幫忙很多事，但重要判斷不能外包。</strong></div>
+                    </div>
+                </section>
+            </section>
+
+            <section>
+                <section>
+                    <div class="slide-content hero-slide section-intro-slide">
+                        <div class="section-intro-layout">
+                            <div class="section-intro-main">
+                                <div class="section-intro-overline">PART 2</div>
+                                <h2>AI 怎麼做到的</h2>
+                                <p class="section-lead">這一段不走太硬的工程課路線，我們只抓住最重要、最夠用的核心觀念。</p>
+                                <div class="section-intro-rule"></div>
+                                <div class="section-intro-meta">AI / ML / DL / GenAI</div>
+                            </div>
+                            <div class="section-intro-side">
+                                <div class="section-intro-card">
+                                    <div class="section-intro-index">01</div>
+                                    <div>
+                                        <strong>先分清楚</strong>
+                                        <span>AI、ML、DL、GenAI 的關係到底差在哪裡。</span>
+                                    </div>
+                                </div>
+                                <div class="section-intro-card">
+                                    <div class="section-intro-index">02</div>
+                                    <div>
+                                        <strong>再看原理</strong>
+                                        <span>電腦怎麼看圖、怎麼讀字、為什麼 GPU 重要。</span>
+                                    </div>
+                                </div>
+                                <div class="section-intro-card">
+                                    <div class="section-intro-index">03</div>
+                                    <div>
+                                        <strong>最後判斷</strong>
+                                        <span>理解 AI 為什麼會幻覺，以及倫理與查證的重要性。</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content narrow-slide">
+                        <h3>1. AI、機器學習、深度學習、生成式 AI 的關係</h3>
                         <div class="grid-2">
                             <div class="concentric-wrapper">
                                 <div class="c-circle c-1">AI</div>
@@ -237,643 +2123,512 @@
                                 <div class="c-circle c-4">GenAI</div>
                             </div>
                             <div class="card">
-                                <ul>
-                                    <li><strong>AI (人工智慧)</strong>: 總稱。包含規則式 (Rule-based) 與學習式。</li>
-                                    <li><strong>ML (機器學習)</strong>: 從數據找規律，而非手寫規則。Data-driven。</li>
-                                    <li><strong>DL (深度學習)</strong>: 模擬人腦神經網路 (Neural Networks)，多層結構，處理複雜特徵。</li>
-                                    <li><strong>GenAI (生成式)</strong>: 專注於「創造」新內容 (文/圖/碼) 的 DL。</li>
+                                <ul class="list-tight">
+                                    <li><strong>AI</strong>：只要讓機器表現得像「有智慧」，都可算廣義 AI。</li>
+                                    <li><strong>ML</strong>：不寫死規則，而是讓機器從資料中找規律。</li>
+                                    <li><strong>DL</strong>：用多層神經網路處理更複雜的模式。</li>
+                                    <li><strong>GenAI</strong>：擅長生成新內容，例如文章、圖片、程式碼。</li>
                                 </ul>
+                                <div class="analogy-box">你可以把它想成「大傘套小傘」：不是每個 AI 都是聊天機器人，但聊天機器人屬於生成式 AI 的一種。</div>
                             </div>
+                        </div>
+                        <div class="slide-link">如果想先用一支短片暖身：
+                            <a href="https://www.youtube.com/watch?v=5IAgze909Mc" target="_blank" rel="noopener noreferrer">【生成式AI科普1】啥是 AIGC？</a>
                         </div>
                     </div>
                 </section>
 
-                <!-- 1.3 ML Types -->
                 <section>
-                    <div class="slide-content">
-                        <h3>3. 機器學習的三大流派</h3>
-                        <div class="grid-3">
+                    <div class="slide-content narrow-slide">
+                        <h3>2. 機器學習的三種常見方式</h3>
+                        <div class="grid-3 feature-grid">
                             <div class="card">
-                                <h4>1. 監督式 (Supervised)</h4>
-                                <p><strong>有標準答案</strong></p>
-                                <p>老師指著圖說「這是貓」。<br>資料需要標註 (Label)。<br>應用：FaceID、垃圾信過濾。</p>
+                                <h4>監督式學習</h4>
+                                <p><strong>有標準答案</strong>。像老師批改考卷，你給答案，系統學會如何分類或預測。</p>
+                                <p>例子：垃圾信分類、臉部辨識。</p>
                             </div>
                             <div class="card">
-                                <h4>2. 非監督式 (Unsupervised)</h4>
-                                <p><strong>無標準答案</strong></p>
-                                <p>自己找規律分群。<br>資料不需要標註。<br>應用：Netflix 推薦、顧客分群。</p>
+                                <h4>非監督式學習</h4>
+                                <p><strong>沒有標準答案</strong>。讓系統自己找出資料中的相似群組或模式。</p>
+                                <p>例子：顧客分群、興趣分群。</p>
                             </div>
                             <div class="card">
-                                <h4>3. 強化學習 (Reinforcement)</h4>
-                                <p><strong>獎懲機制</strong></p>
-                                <p>做對給分，做錯扣分。<br>像訓練寵物。<br>應用：AlphaGo、瑪利歐 AI。</p>
+                                <h4>強化學習</h4>
+                                <p><strong>靠獎勵與懲罰</strong>慢慢試出策略。</p>
+                                <p>例子：AlphaGo、機器人控制、遊戲 AI。</p>
                             </div>
+                        </div>
+                        <div class="slide-link">想先快速認識機器學習：
+                            <a href="https://www.youtube.com/watch?v=OZDPnJiNjhg" target="_blank" rel="noopener noreferrer">AI 機器學習 ｜AI WOW（入門短片）</a>
                         </div>
                     </div>
                 </section>
 
-                <!-- 1.4 Transfer Learning -->
                 <section>
-                    <div class="slide-content">
-                        <h3>4. 遷移學習 (Transfer Learning)</h3>
-                        <div class="grid-2">
-                            <div class="card">
-                                <h4>站在巨人的肩膀上</h4>
-                                <p><strong>概念</strong>: 不用從零開始 (Training from Scratch)。我們下載 Google/Meta 花幾億元訓練好的「通用大腦」，再教它一點點「專業知識」。</p>
-                                <div class="analogy-box" style="margin-top:15px; font-size: 0.9em;">
-                                    🎹 <strong>比喻</strong>: 你已經學會了鋼琴 (通用音樂能力)，現在學管風琴 (新任務) 只需要一週，而不是十年。
-                                </div>
-                            </div>
-                            <div class="card">
-                                <h4>經典案例</h4>
-                                <ul style="font-size: 0.9em;">
-                                    <li><strong>醫學 AI</strong>: 下載辨識萬物的 ResNet (看過貓狗車子)，微調看 <strong>X 光片</strong> → 變成癌症專家。</li>
-                                    <li><strong>程式助手</strong>: 下載讀過全網文章的 GPT (懂英文)，微調讀 <strong>GitHub 代碼</strong> → 變成 Copilot。</li>
-                                    <li><strong>優勢</strong>: 
-                                        <br>1. <strong>省錢</strong>: 不用買 1000 張顯卡。
-                                        <br>2. <strong>少資料</strong>: 只有 100 張照片也能訓練。
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 1.5 Neural Network -->
-                <section>
-                    <div class="slide-content">
-                        <h3>5. 神經網路：模擬大腦的數學</h3>
-                        <div class="grid-2">
-                            <div class="card">
-                                <h4>感知機 (Perceptron)</h4>
-                                <div class="code-box" style="text-align:center">Output = Activation(Input × Weight + Bias)</div>
-                                <ul>
-                                    <li><strong>Weight (權重)</strong>: 連結強度，即「記憶」。</li>
-                                    <li><strong>Bias (偏差)</strong>: 觸發門檻。</li>
-                                </ul>
-                            </div>
-                            <div class="card">
-                                <h4>深度神經網路 (DNN)</h4>
-                                <ul>
-                                    <li><strong>輸入層</strong>: 眼睛 (接收資料)。</li>
-                                    <li><strong>隱藏層</strong>: 大腦 (提取特徵)。越深越聰明，能理解越抽象的概念。</li>
-                                    <li><strong>輸出層</strong>: 做出判斷 (是貓/是狗)。</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 1.6 Activation Functions -->
-                <section>
-                    <div class="slide-content">
-                        <h3>6. 激活函數：賦予 AI 靈魂的開關</h3>
-                        <p style="font-size: 0.8em; margin-bottom: 20px;">如果沒有激活函數，神經網路不管有幾層，最後都只是一條無聊的直線 (線性回歸)。激活函數引入了「非線性」，讓 AI 能理解複雜的世界 (曲線)。</p>
-                        <div class="grid-3">
-                            <div class="card">
-                                <h4>Sigmoid (S 形)</h4>
-                                <p style="font-size:0.8em;">將數值壓縮在 0~1 之間。像傳統電路開關，要嘛開要嘛關。</p>
-                                <p style="font-size:0.8em; color:var(--secondary);">缺點：容易造成「梯度消失」，讓深層網路學不動。</p>
-                            </div>
-                            <div class="card" style="border-top: 3px solid var(--primary);">
-                                <h4>ReLU (主流)</h4>
-                                <p style="font-size:0.8em;"><strong>負數歸 0，正數不變。</strong></p>
-                                <div class="code-box" style="padding:10px; font-size:0.7em;">if x < 0: return 0
-else: return x</div>
-                                <p style="font-size:0.8em;">簡單粗暴，計算極快！模擬生物神經元：訊號不夠強就不傳遞。</p>
-                            </div>
-                            <div class="card">
-                                <h4>Softmax (機率)</h4>
-                                <p style="font-size:0.8em;">用於最後一層。將一堆混亂的數字變成<strong>總和 100% 的機率</strong>。</p>
-                                <p style="font-size:0.8em; color:var(--highlight);">貓: 90%, 狗: 5%, 鳥: 5%</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 1.7 Training -->
-                <section>
-                    <div class="slide-content">
-                        <h3>7. 訓練：從錯誤中學習</h3>
-                        <div class="grid-2">
-                            <div class="card">
-                                <h4>Loss Function (損失函數)</h4>
-                                <p>計分板。衡量猜測值與真實值的差距。<br><em>Loss 大 = 笨蛋；Loss 小 = 天才。</em></p>
-                            </div>
-                            <div class="card">
-                                <h4>Backpropagation (反向傳播)</h4>
-                                <p><strong>核心魔法</strong>。老師改考卷，告訴每個神經元「你錯在哪」，並微調權重。重複一億次，AI 就學會了。</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 1.8 Hardware -->
-                <section>
-                    <div class="slide-content">
-                        <h3>8. 算力科普：CPU vs GPU</h3>
-                        <div class="card" style="margin-bottom: 20px; background: rgba(59, 130, 246, 0.1); border: 1px dashed var(--primary);">
-                            <p style="margin:0;"><strong>為什麼打電動的顯卡 (GPU) 變成了 AI 的核心？</strong></p>
-                        </div>
-                        <table class="comp-table">
-                            <thead>
-                                <tr>
-                                    <th>特性</th>
-                                    <th>CPU (中央處理器)</th>
-                                    <th>GPU (圖形處理器)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>比喻</strong></td>
-                                    <td>
-                                        <strong>幾位大學教授</strong><br>
-                                        非常聰明，能解微積分，但一次只能改一張考卷。
-                                    </td>
-                                    <td>
-                                        <strong>一萬個小學生</strong><br>
-                                        只會加減乘除，但能同時改一萬張考卷。
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>擅長</strong></td>
-                                    <td>複雜邏輯、開 App、作業系統 (OS)。<br>適合序列任務 (Sequential)。</td>
-                                    <td><strong>平行運算</strong>、畫圖、AI 矩陣。<br>適合大規模重複計算 (Parallel)。</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>核心數</strong></td>
-                                    <td>少 (4-64)，極強。</td>
-                                    <td><strong>海量 (數千)，較弱。</strong></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <!-- 1.9 Why GPU -->
-                <section>
-                    <div class="slide-content">
-                        <h3>9. 矩陣乘法：AI 的算術課</h3>
-                        <div class="grid-2">
-                            <div class="card">
-                                <h4>AI 其實都在算矩陣</h4>
-                                <p>神經網路的運算，拆解到底，就是數億次的 <strong>A x B + C</strong>。</p>
-                                <p>這不需要很強的邏輯 (CPU)，只需要暴力的平行算力 (GPU)。</p>
-                            </div>
-                            <div class="card">
-                                <h4>NVIDIA 的崛起</h4>
-                                <p>NVIDIA 原本是做顯卡給玩家打電動的。剛好「渲染 3D 畫面」也是在算矩陣。</p>
-                                <p>於是，顯卡搖身一變，成為了訓練 AI 的神器。</p>
-                                <div class="fun-fact">💡 訓練一個 GPT-4，需要數萬張 H100 顯卡跑好幾個月。</div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 1.10 CV Pixel -->
-                <section>
-                    <div class="slide-content">
-                        <h3>10. 電腦視覺：圖片其實是數字</h3>
-                        <div class="grid-2">
-                            <div class="card">
-                                <h4>像素矩陣 (Pixel Matrix)</h4>
-                                <p>電腦看不到「顏色」，只看到 <strong>0-255 的數字</strong>。一張 1080p 的照片，其實是 600 萬個數字的排列組合。</p> 
-                                <div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:8px; margin-top:10px;">
-                                    <p style="margin:0 0 5px 0; color:var(--highlight); font-weight:bold;">為什麼是 600 萬？</p>
-                                    <ul style="margin:0 0 0 20px; font-size:0.9em;">
-                                        <li>解析度 1080p = 1920 x 1080 ≈ <strong>207 萬畫素</strong></li>
-                                        <li>每個畫素由 <strong>RGB (紅綠藍)</strong> 3 個色光組成</li>
-                                        <li>總數字量 = 207 萬 x 3 ≈ <strong>622 萬個數字</strong></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div style="display:flex; flex-direction:column; gap:20px;">
-                                <div class="code-box" style="margin-top:0;">
-[
-  [255, 0, 0] (紅), [0, 255, 0] (綠)...
-  [0, 0, 255] (藍), [255, 255, 255] (白)...
-  ... (x 2,000,000)
-]
-                                </div>
-                                <div class="analogy-box" style="margin-top: 0;">
-                                    👀 <strong>挑戰</strong>: 如果你把貓的照片往右移一格，這 600 萬個數字會<strong>全部改變</strong>。傳統程式崩潰，但 AI (CNN) 能認出。
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 1.11 CNN -->
-                <section>
-                    <div class="slide-content">
-                        <h3>11. CNN：找特徵的高手</h3>
-                        <div class="grid-3">
-                            <div class="card">
-                                <h4>1. 卷積 (Convolution)</h4>
-                                <p>拿手電筒 (Filter) 掃描。找邊緣、線條、圓弧。</p>
-                            </div>
-                            <div class="card">
-                                <h4>2. 池化 (Pooling)</h4>
-                                <p>瞇著眼看。縮小圖片，只留重點，忽略雜訊。</p>
-                            </div>
-                            <div class="card">
-                                <h4>3. 全連接 (FC)</h4>
-                                <p>拼圖。有尖耳 + 鬍鬚 + 貓眼 = <strong>貓</strong>。</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 1.12 LPR Case -->
-                <section>
-                    <div class="slide-content">
-                        <h3>12. 實例：車牌辨識 (LPR)</h3>
-                        <div class="grid-3">
-                            <div class="card">
-                                <h4>1. 定位 (Localization)</h4>
-                                <p>在整張街景圖中，找出「長方形、有字」的區域 -> 鎖定車牌。</p>
-                            </div>
-                            <div class="card">
-                                <h4>2. 分割 (Segmentation)</h4>
-                                <p>像切蛋糕一樣，把 "ABC-1234" 切成 7 張小圖片。</p>
-                            </div>
-                            <div class="card">
-                                <h4>3. 識別 (OCR)</h4>
-                                <p>辨識每一張小圖片是 "A" 還是 "8"。</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 1.13 NLP -->
-                <section>
-                    <div class="slide-content">
-                        <h3>13. 自然語言處理：詞向量</h3>
-                        <div class="grid-2">
-                            <div class="card">
-                                <h4>Word Embeddings</h4>
-                                <p>把文字變成空間座標 (Vector)。意義相近的字，距離很近。</p>
-                            </div>
-                            <div class="card">
-                                <h4>向量運算</h4>
-                                <div class="code-box" style="text-align:center">國王 - 男人 + 女人 = 皇后</div>
-                                <p>AI 用數學理解了語意關係。</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 1.14 RNN -->
-                <section>
-                    <div class="slide-content">
-                        <h3>14. 舊時代：RNN 的瓶頸</h3>
-                        <div class="grid-2">
-                            <div class="card">
-                                <h4>序列處理</h4>
-                                <p>讀書必須一個字一個字讀。無法平行化，慢。</p>
-                            </div>
-                            <div class="card">
-                                <h4>金魚腦問題</h4>
-                                <p>讀到文章最後，往往已經忘記開頭在講什麼。</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 1.15 Transformer -->
-                <section>
-                    <div class="slide-content">
-                        <h3>15. Transformer：AI 的 iPhone 時刻</h3>
+                    <div class="slide-content narrow-slide">
+                        <h3>3. 為什麼 GPU 對 AI 很重要？</h3>
                         <div class="card">
-                            <p>2017 年 Google 發表論文，改變了一切。</p>
-                            <p><strong>突破點：平行閱讀 (Parallelism)</strong></p>
-                            <p>Transformer 不再順序閱讀，而是<strong>「一眼看完」</strong>整本書。這讓它能利用 GPU 的強大算力，訓練出超巨大的模型 (如 GPT)。</p>
+                            <p>因為 AI 訓練裡面有非常多「重複、可平行」的計算，所以 GPU 特別吃香。</p>
+                            <table class="comp-table">
+                                <thead>
+                                    <tr>
+                                        <th>比較項目</th>
+                                        <th>CPU</th>
+                                        <th>GPU</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>比喻</strong></td>
+                                        <td>幾位超強老師，一次處理少量但複雜的題目。</td>
+                                        <td>很多位助教，同時處理大量類似計算。</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>擅長</strong></td>
+                                        <td>複雜邏輯、系統控制、應用程式。</td>
+                                        <td>矩陣運算、影像處理、深度學習訓練。</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>為何 AI 愛用</strong></td>
+                                        <td>夠聰明，但不適合海量重複工作。</td>
+                                        <td>大量平行運算，剛好符合神經網路需求。</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="fun-fact">如果說 AI 模型是學生，GPU 就像一整間超大補習班，能讓它在短時間內練更多題目。</div>
+                        </div>
+                        <div class="slide-link">如果你想用 8 分鐘搞懂 CPU/GPU/TPU 的差異：
+                            <a href="https://www.youtube.com/watch?v=-evgGH8Mhpo" target="_blank" rel="noopener noreferrer">【超級懶人包】一次搞懂CPU、GPU、TPU、NPU</a>
                         </div>
                     </div>
                 </section>
 
-                <!-- 1.16 Attention -->
                 <section>
-                    <div class="slide-content">
-                        <h3>16. 核心機制：注意力 (Attention)</h3>
-                        <div class="card">
-                            <h4>比喻：雞尾酒會效應</h4>
-                            <p>在吵雜的派對中，你可以<strong>瞬間聚焦</strong>聽到有人叫你的名字，並忽略背景雜音。</p>
-                            <hr style="border-color:#333; margin:15px 0;">
-                            <p style="font-family:monospace">"The <strong>animal</strong> didn't cross the street because <strong>it</strong> was too tired."</p>
-                            <p>Attention 讓 AI 知道 "it" 指的是 "animal" (因為累)，而不是 "street"。</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 1.17 LLM -->
-                <section>
-                    <div class="slide-content">
-                        <h3>17. LLM 本質：機率接龍</h3>
+                    <div class="slide-content narrow-slide">
+                        <h3>4. 電腦怎麼看圖？從像素到特徵</h3>
                         <div class="grid-2">
                             <div class="card">
-                                <h4>Next Token Prediction</h4>
-                                <p>ChatGPT 其實沒有意識，它只是預測<strong>下一個字</strong>。</p>
+                                <h4>第一步：先把圖片變成數字</h4>
+                                <p>電腦看不到「可愛」或「悲傷」，它看到的是一格一格的數值，例如 RGB 顏色強度。</p>
+                                <div class="code-box">[255, 0, 0] 代表偏紅
+[0, 255, 0] 代表偏綠
+[0, 0, 255] 代表偏藍</div>
                             </div>
                             <div class="card">
-                                <h4>機率表</h4>
-                                <div class="code-box">Input: "床前明月"
-光: 85%
-亮: 10%
-餅: 0.01%</div>
+                                <h4>第二步：再從數字抓特徵</h4>
+                                <ul class="list-tight">
+                                    <li><strong>卷積</strong>：找邊緣、紋理、輪廓。</li>
+                                    <li><strong>池化</strong>：縮小畫面、保留重點。</li>
+                                    <li><strong>分類</strong>：把耳朵、眼睛、鬍鬚等特徵拼起來。</li>
+                                </ul>
+                                <div class="analogy-box">像你看到一張貓的照片，不是先背每一根毛，而是先抓「耳朵尖尖、臉型、眼睛位置」這些關鍵線索。</div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- 1.18 Diffusion -->
                 <section>
-                    <div class="slide-content">
-                        <h3>18. 生成圖片：擴散模型 (Diffusion)</h3>
+                    <div class="slide-content narrow-slide">
+                        <h3>5. 電腦怎麼懂文字？從接龍到理解脈絡</h3>
                         <div class="grid-2">
                             <div class="card">
-                                <h4>原理：去噪 (Denoising)</h4>
-                                <p>想像一塊充滿雪花雜訊的螢幕。</p>
-                                <p>AI 的工作就是從這團雜訊中，慢慢「雕刻」出你想要的畫面 (例如：一隻騎車的貓)。</p>
+                                <h4>LLM 的基礎直覺</h4>
+                                <p>大型語言模型最核心的任務可以先想成「下一個字或 token 最可能是什麼」。</p>
+                                <div class="code-box">輸入：床前明月
+可能下一個詞：
+光 85%
+亮 10%
+餅 0.01%</div>
                             </div>
                             <div class="card">
-                                <h4>過程</h4>
-                                <p>訓練時：把圖加噪變模糊。<br>生成時：逆向操作，把雜訊還原成圖。</p>
+                                <h4>Transformer 的關鍵突破</h4>
+                                <p>它不是一個字一個字慢慢忘，而是能同時看前後文，抓出哪些詞彼此最有關係。</p>
+                                <div class="question-box">例句：<br>"The animal didn't cross the street because it was too tired."<br><br>AI 要判斷 <strong>it</strong> 指的是 animal 還是 street。</div>
                             </div>
                         </div>
-                    </div>
-                </section>
-
-                <!-- 1.19 Hallucination -->
-                <section>
-                    <div class="slide-content">
-                        <h3>19. 幻覺 (Hallucination)</h3>
-                        <div class="card">
-                            <h4>為什麼 AI 會說謊？</h4>
-                            <p>因為它只在乎「機率高」，不在乎「事實」。</p>
-                            <p>當它不知道答案，為了讓句子通順，它會拼湊出一個看起來很合理的假答案。</p>
-                            <div class="fun-fact">💡 解法：RAG (先查資料再回答)。</div>
+                        <div class="slide-link">如果你想先用比較白話的方式理解大語言模型：
+                            <a href="https://www.youtube.com/watch?v=ERr6J1bDXUI&t=36s" target="_blank" rel="noopener noreferrer">什麼是大型語言模型? LLM是什麼？| AI基礎觀念-2</a>
                         </div>
                     </div>
                 </section>
 
-                <!-- 1.20 Ethics -->
                 <section>
-                    <div class="slide-content">
-                        <h3>20. AI 倫理</h3>
+                    <div class="slide-content narrow-slide">
+                        <h3>6. 為什麼 AI 有時會一本正經地胡說八道？</h3>
                         <div class="grid-2">
                             <div class="card">
-                                <h4>偏見 (Bias)</h4>
-                                <p>如果訓練資料有偏見 (如醫生都是白人)，AI 就會學會偏見。</p>
+                                <h4>幻覺 (Hallucination)</h4>
+                                <p>AI 重視的是「句子看起來像不像真的」，不是「它有沒有真的查證過」。</p>
+                                <ul class="list-tight">
+                                    <li>不知道答案時，可能硬湊出一個合理句子。</li>
+                                    <li>你問得模糊，AI 就更容易亂補。</li>
+                                    <li>如果資料過舊，也可能講出過時資訊。</li>
+                                </ul>
+                            </div>
+                            <div class="card">
+                                <h4>怎麼降低風險？</h4>
+                                <ul class="list-tight">
+                                    <li>要求 AI 提供依據、步驟或來源線索。</li>
+                                    <li>重要資訊自己再查一次。</li>
+                                    <li>搭配 RAG：先查資料，再回答。</li>
+                                </ul>
+                                <div class="takeaway-bar">最重要的一句：<strong>AI 可以幫你加速，但不能取代你的判斷。</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content balanced-slide narrow-slide">
+                        <h3>7. AI 倫理：越方便，越要有判斷力</h3>
+                        <div class="grid-3 feature-grid">
+                            <div class="card">
+                                <h4>偏見</h4>
+                                <p>如果訓練資料本來就不平衡，AI 也可能學到不公平的結論。</p>
+                            </div>
+                            <div class="card">
+                                <h4>隱私</h4>
+                                <p>人臉、聲音、位置、搜尋習慣都可能變成資料來源。</p>
                             </div>
                             <div class="card">
                                 <h4>Deepfake</h4>
-                                <p>眼見不一定為憑。需保持科技素養與懷疑精神。</p>
+                                <p>看到影片、聽到聲音，也不代表一定是真的。</p>
                             </div>
+                        </div>
+                        <div class="thought-box">深度思考：未來真正稀缺的能力，也許不是「會不會按按鈕」，而是<strong>能不能分辨什麼該相信、什麼該查證、什麼該負責。</strong></div>
+                        <div class="slide-link">如果你想看一支比較生活化的短片：
+                            <a href="https://www.gq.com.tw/video/watch/shi-mo-shi-shen-wei-ji-shu-deepfake-er-zhe-xiang-ren-gong-zhi-hui-zhu-li-liao-jia-xin-wen-zeng-chang-ke-pu-chang-zhi-shi-gq-taiwan" target="_blank" rel="noopener noreferrer">什麼是深偽技術（Deepfake）？｜GQ Taiwan</a>
                         </div>
                     </div>
                 </section>
-
             </section>
 
-            <!-- ================= PART 2: 實作 ================= -->
             <section>
                 <section>
-                    <div class="slide-content" style="justify-content: center; text-align: center;">
-                        <div class="tag">PART 2</div>
-                        <h2 style="font-size: 3em; margin: 20px 0;">Vibe Coding 實作</h2>
-                        <p>Logic First, Syntax Second.</p>
+                    <div class="slide-content hero-slide section-intro-slide">
+                        <div class="section-intro-layout">
+                            <div class="section-intro-main">
+                                <div class="section-intro-overline">PART 3</div>
+                                <h2>和 AI 一起做事</h2>
+                                <p class="section-lead">最後一段不是教你偷懶，而是教你怎麼把 AI 變成一位有用的副手。</p>
+                                <div class="section-intro-rule"></div>
+                                <div class="section-intro-meta">Prompt / Build / Verify</div>
+                            </div>
+                            <div class="section-intro-side">
+                                <div class="section-intro-card">
+                                    <div class="section-intro-index">01</div>
+                                    <div>
+                                        <strong>會提需求</strong>
+                                        <span>把目標、風格與輸出格式講清楚，AI 才能幫上忙。</span>
+                                    </div>
+                                </div>
+                                <div class="section-intro-card">
+                                    <div class="section-intro-index">02</div>
+                                    <div>
+                                        <strong>會做作品</strong>
+                                        <span>從題目、流程到小專題，知道怎麼快速做出第一版。</span>
+                                    </div>
+                                </div>
+                                <div class="section-intro-card">
+                                    <div class="section-intro-index">03</div>
+                                    <div>
+                                        <strong>會驗證</strong>
+                                        <span>除錯、修正、部署與展示，讓成果不只是作業而已。</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
-                <!-- 2.1 Paradigm -->
                 <section>
-                    <div class="slide-content">
-                        <h3>1. 典範轉移 (Paradigm Shift)</h3>
+                    <div class="slide-content narrow-slide">
+                        <h3>1. Vibe Coding：從「背語法」走向「先想清楚」</h3>
                         <div class="grid-2">
-                            <div class="card" style="opacity:0.7;">
-                                <h4>傳統 Coding (Cons)</h4>
-                                <ul>
-                                    <li>❌ <strong>門檻高</strong>: 需背誦大量語法與 API。</li>
-                                    <li>❌ <strong>耗時</strong>: 手寫每一行代碼，Debug 時間長。</li>
-                                    <li>❌ <strong>專注細節</strong>: 容易陷入「少個分號」的低級錯誤。</li>
+                            <div class="card soft">
+                                <h4>以前常見的卡點</h4>
+                                <ul class="list-tight">
+                                    <li>不知道從哪開始寫。</li>
+                                    <li>被語法細節卡住，做不出成品。</li>
+                                    <li>花太多時間在低階錯誤上。</li>
                                 </ul>
                             </div>
-                            <div class="card" style="border-color:var(--primary);">
-                                <h4>Vibe Coding (Pros)</h4>
-                                <ul>
-                                    <li>✅ <strong>專注邏輯</strong>: 像建築師一樣設計，而非像工人一樣砌磚。</li>
-                                    <li>✅ <strong>速度快</strong>: 幾秒鐘生成原型，快速迭代。</li>
-                                    <li>✅ <strong>自然語言</strong>: 用中文就能寫程式，降低入門門檻。</li>
+                            <div class="card primary">
+                                <h4>現在更重要的能力</h4>
+                                <ul class="list-tight">
+                                    <li>先定義目標與使用情境。</li>
+                                    <li>把需求講清楚給 AI。</li>
+                                    <li>知道怎麼修改、驗證、迭代。</li>
                                 </ul>
+                                <div class="fun-fact">AI 不會讓思考消失，反而會逼你更清楚地表達「你到底要什麼」。</div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- 2.2 Workflow -->
                 <section>
-                    <div class="slide-content">
-                        <h3>2. 開發流程 (0 to 1)</h3>
-                        <div class="card">
-                            <div style="display:flex; justify-content:space-between; text-align:center; margin-top:20px;">
-                                <div>💡<br><strong>構思 (Idea)</strong><br><small>解決什麼問題？</small></div><div>→</div>
-                                <div>📝<br><strong>規格 (Spec)</strong><br><small>詳細功能列表</small></div><div>→</div>
-                                <div>💬<br><strong>指令 (Prompt)</strong><br><small>CO-STAR 結構</small></div><div>→</div>
-                                <div>🔨<br><strong>生成 (Build)</strong><br><small>Claude 產出</small></div><div>→</div>
-                                <div>🔧<br><strong>優化 (Refine)</strong><br><small>迭代與除錯</small></div>
-                            </div>
-                            <p style="margin-top:30px; text-align:center; color:var(--primary);">重點：<strong>不要跳過 Spec (規格)</strong>。你想得越清楚，AI 寫得越準。</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 2.3 CO-STAR -->
-                <section>
-                    <div class="slide-content">
-                        <h3>3. CO-STAR 指令框架</h3>
-                        <div class="grid-3">
-                            <div class="card">
-                                <h4>Context (脈絡)</h4>
-                                <p>提供背景資訊。<br><em>"我是一個初學 HTML 的學生..."</em></p>
-                            </div>
-                            <div class="card">
-                                <h4>Objective (目標)</h4>
-                                <p>你想要 AI 做什麼？<br><em>"寫一個 RWD 個人網站..."</em></p>
-                            </div>
-                            <div class="card">
-                                <h4>Style (風格)</h4>
-                                <p>寫作風格或代碼風格。<br><em>"Glassmorphism, Clean Code..."</em></p>
-                            </div>
-                            <div class="card">
-                                <h4>Tone (語氣)</h4>
-                                <p>AI 的態度。<br><em>"熱情、教學式、專業..."</em></p>
-                            </div>
-                            <div class="card">
-                                <h4>Audience (受眾)</h4>
-                                <p>誰會看這個內容？<br><em>"給沒有程式背景的人看..."</em></p>
-                            </div>
-                            <div class="card">
-                                <h4>Response (格式)</h4>
-                                <p>輸出格式。<br><em>"完整的 HTML 檔案..."</em></p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 2.4 Project -->
-                <section>
-                    <div class="slide-content">
-                        <h3>4. 實戰：個人展示網頁 (Portfolio)</h3>
-                        <div class="grid-2">
-                            <div class="card">
-                                <h4>目標</h4>
-                                <p>建立一個多區塊、RWD 響應式的完整個人網站。</p>
-                            </div>
-                            <div class="card">
-                                <h4>功能規格</h4>
-                                <ul>
-                                    <li><strong>Hero Section</strong>: 頭像 + 自我介紹 + 社交連結。</li>
-                                    <li><strong>About</strong>: 詳細經歷與技能條 (Skill Bars)。</li>
-                                    <li><strong>Portfolio</strong>: 作品集網格展示 (Grid Layout)。</li>
-                                    <li><strong>Contact</strong>: 簡單的聯絡表單或 Email 連結。</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 2.5 Prompting -->
-                <section>
-                    <div class="slide-content">
-                        <h3>5. 實戰指令 (The Prompt)</h3>
-                        <div class="code-box"><strong># Role</strong>
-你是一位擁有 10 年經驗的資深前端設計師，擅長 Awwwards 得獎風格的網頁設計。
-
-<strong># Context & Objective</strong>
-我要為自己製作一個「個人作品集網站 (Portfolio)」。請幫我寫出完整的單一 HTML 檔案 (包含 CSS/JS)。
-
-<strong># Requirements</strong>
-1. <strong>Hero Section</strong>: 左邊是我的名字與一句話介紹，右邊是圓形頭像。背景使用深色動態漸層。
-2. <strong>About Section</strong>: 使用卡片式設計展示我的學歷與經歷。
-3. <strong>Portfolio Section</strong>: 使用 CSS Grid 展示 3 個作品，滑鼠移過去要有放大特效 (Hover Scale)。
-4. <strong>Style</strong>: 使用 Glassmorphism (毛玻璃) 風格，配色以深藍 (#0f172a) 為主，搭配霓虹粉 (#f43f5e) 點綴。
-5. <strong>Tech</strong>: 純 HTML/CSS，不需要外部 Library，且必須支援手機版 (Responsive)。
-
-<strong># Output</strong>
-請提供完整的 index.html 代碼。</div>
-                    </div>
-                </section>
-
-                <!-- 2.6 Debugging -->
-                <section>
-                    <div class="slide-content">
-                        <h3>6. 除錯 SOP</h3>
-                        <div class="card">
-                            <h4>黃金法則：把 Error 餵給 AI</h4>
-                            <div class="grid-2">
+                    <div class="slide-content narrow-slide student-flow-slide">
+                        <h3>2. 學生版工作流程：想法到成品</h3>
+                        <div class="student-flow-layout">
+                            <div class="student-flow-intro">
                                 <div>
-                                    <ol>
-                                        <li>F12 開啟 Console。</li>
-                                        <li>複製紅色錯誤。</li>
-                                        <li>貼給 AI + <strong>"Fix this and explain why"</strong>。</li>
-                                    </ol>
+                                    <div class="student-flow-kicker">From Idea to First Version</div>
+                                    <p class="student-flow-title">先做出第一版，<br>再慢慢把它變好。</p>
                                 </div>
-                                <div class="code-box" style="margin-top:0;">
-User: "我的圖片跑版了，而且 Console 顯示 404 Error。"
-Claude: "這是因為圖片路徑錯誤..."
+                                <p class="student-flow-lead">如果你不知道怎麼開始做 AI 小專題，可以先不要想太複雜。先照著四步走，目標不是一次做到完美，而是先做出一個可修改、可展示、可繼續進化的版本。</p>
+                                <div class="takeaway-bar">關鍵觀念：<strong>不要跳過規格</strong>。你想得越清楚，AI 寫得越準。</div>
+                            </div>
+                            <div class="student-flow-list">
+                                <div class="student-flow-item">
+                                    <div class="student-flow-index">STEP 1</div>
+                                    <div>
+                                        <strong>定題目</strong>
+                                        <p>先想清楚你要解決什麼問題、誰會使用，題目越具體，後面越好做。</p>
+                                    </div>
+                                </div>
+                                <div class="student-flow-item">
+                                    <div class="student-flow-index">STEP 2</div>
+                                    <div>
+                                        <strong>列規格</strong>
+                                        <p>至少列出功能、版面、風格與輸入輸出，這是你和 AI 溝通的基礎。</p>
+                                    </div>
+                                </div>
+                                <div class="student-flow-item">
+                                    <div class="student-flow-index">STEP 3</div>
+                                    <div>
+                                        <strong>讓 AI 生成</strong>
+                                        <p>先做出能動的第一版，不追求一次完美，讓 AI 幫你快速試版本。</p>
+                                    </div>
+                                </div>
+                                <div class="student-flow-item">
+                                    <div class="student-flow-index">STEP 4</div>
+                                    <div>
+                                        <strong>自己驗證</strong>
+                                        <p>自己測試、修正、補上觀點，確認作品不是只有能跑而已。</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- 2.7 Environment -->
                 <section>
-                    <div class="slide-content">
-                        <h3>7. 工具介紹</h3>
-                        <div class="grid-3">
-                            <div class="card"><h4>瀏覽器 (Browser)</h4><p>你的主要開發環境。</p></div>
-                            <div class="card"><h4>Claude Artifacts</h4><p>即時預覽，所見即所得。不需安裝 VS Code 也能寫程式。</p></div>
-                            <div class="card"><h4>Project Knowledge</h4><p>上傳舊代碼讓 AI 讀懂。</p></div>
-                        </div>
-                    </div>
-                </section>
-            </section>
-
-            <!-- ================= PART 3: 專題與未來 ================= -->
-            <section>
-                <section>
-                    <div class="slide-content" style="justify-content: center; text-align: center;">
-                        <div class="tag">PART 3</div>
-                        <h2 style="font-size: 3em; margin: 20px 0;">專題與未來</h2>
-                        <p>Build, Ship, Scale.</p>
-                    </div>
-                </section>
-
-                <!-- 3.1 README -->
-                <section>
-                    <div class="slide-content">
-                        <h3>1. 文件力：README.md</h3>
-                        <p>"Documentation is Code."</p>
-                        <div class="card">
-                            <p>讓 AI 幫你寫！包含 Title, Intro, Features, Usage。</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 3.2 Git -->
-                <section>
-                    <div class="slide-content">
-                        <h3>2. 版本控制：Git & GitHub</h3>
+                    <div class="slide-content compact-slide narrow-slide">
+                        <h3>3. 比 CO-STAR 更好記的提示設計：四句話講清楚</h3>
                         <div class="grid-2">
-                            <div class="card"><h4>Git (本地)</h4><p>時光機。init, add, commit。</p></div>
-                            <div class="card"><h4>GitHub (雲端)</h4><p>社群。Repo, Pages, Fork, PR。</p></div>
-                        </div>
-                    </div>
-                </section>
+                            <div class="card">
+                                <h4>你可以這樣下指令</h4>
+                                <ol class="list-tight">
+                                    <li><strong>我是誰</strong>：我的程度、角色、需求背景。</li>
+                                    <li><strong>我要做什麼</strong>：作品目標或問題。</li>
+                                    <li><strong>我要什麼風格</strong>：版面、語氣、功能。</li>
+                                    <li><strong>請怎麼輸出</strong>：完整 HTML？條列建議？一步一步教學？</li>
+                                </ol>
+                            </div>
+                            <div class="card">
+                                <h4>學生版範例</h4>
+                                <div class="code-box">我是高中生，想做一個介紹自己社團的單頁網站。
+請用繁體中文、科技感深色風格，內容要有：
+1. 社團介紹
+2. 活動照片區
+3. 報名資訊
+4. 手機版也能正常顯示
 
-                <!-- 3.3 Deployment -->
-                <section>
-                    <div class="slide-content">
-                        <h3>3. 部署 (Deployment)</h3>
-                        <p>如何讓朋友看到你的網頁？</p>
-                        <div class="grid-3">
-                            <div class="card">
-                                <h4>GitHub Pages</h4>
-                                <p>最簡單，免費。推上 GitHub 即可開啟靜態網頁。</p>
-                            </div>
-                            <div class="card">
-                                <h4>Vercel</h4>
-                                <p>更專業，支援自動化部署。拖拉資料夾即可上線。</p>
-                            </div>
-                            <div class="card">
-                                <h4>Netlify</h4>
-                                <p>類似 Vercel，適合靜態網頁與前端專案。</p>
+請直接給我完整的單一 HTML 檔案。</div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- 3.4 Future -->
                 <section>
-                    <div class="slide-content">
-                        <h3>4. 未來地圖</h3>
-                        <div class="grid-3">
-                            <div class="card"><h4>RAG</h4><p>外掛知識庫，解決幻覺。</p></div>
-                            <div class="card"><h4>Agents</h4><p>AI 代理人，自主執行任務。</p></div>
-                            <div class="card"><h4>Fine-tuning</h4><p>訓練專屬模型。</p></div>
+                    <div class="slide-content compact-slide">
+                        <h3>4. 比「個人網站」更吸引學生的 AI 小專題</h3>
+                        <div class="idea-grid">
+                            <div class="card">
+                                <h4>AI 自我介紹頁</h4>
+                                <p>把你的興趣、作品、社群和未來目標做成互動式個人頁。</p>
+                            </div>
+                            <div class="card">
+                                <h4>考前複習小助手</h4>
+                                <p>輸入章節內容，自動產生重點、題目、關鍵字卡。</p>
+                            </div>
+                            <div class="card">
+                                <h4>社團活動宣傳頁</h4>
+                                <p>幫班級或社團設計一頁式宣傳網站，整合資訊與視覺。</p>
+                            </div>
+                        </div>
+                        <div class="poll-grid">
+                            <div class="mini-card"><strong>如果你今天就要做</strong><br>你會選哪一題？<br><br>為什麼它對你有幫助？</div>
+                            <div class="mini-card"><strong>進一步思考</strong><br>哪一部分可以交給 AI？<br>哪一部分一定要靠你自己判斷？</div>
+                        </div>
+                        <div class="image-placeholder">
+                            <div>
+                                <img class="slide-image" src="https://images.unsplash.com/photo-1672309046475-4cce2039f342?auto=format&fit=crop&w=1200&q=80" alt="學生專題與網頁開發示意圖">
+                                <strong>把想法變成作品</strong>
+                                一個專題真正有價值的地方，不只是完成，而是你有沒有把自己的想法放進去。
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- 3.5 Closing -->
                 <section>
-                    <div class="slide-content" style="text-align: center;">
-                        <h2>結語</h2>
-                        <div class="card" style="width: 80%; margin: 0 auto;">
-                            <p style="font-size: 24px;">"AI 不會取代工程師，但會取代不會用 AI 的工程師。"</p>
-                            <p>保持好奇，動手實作！</p>
+                    <div class="slide-content narrow-slide">
+                        <h3>5. 除錯與驗證：AI 不是交出去就算了</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <h4>除錯 SOP</h4>
+                                <ol class="list-tight">
+                                    <li>先看錯在哪裡：版面、內容、功能還是資料？</li>
+                                    <li>打開瀏覽器 Console，看錯誤訊息。</li>
+                                    <li>把錯誤貼給 AI，要求它解釋原因與修法。</li>
+                                    <li>修完後再自己測一次，不要只看它說「已修正」。</li>
+                                </ol>
+                            </div>
+                            <div class="card">
+                                <h4>驗證清單</h4>
+                                <ul class="list-tight">
+                                    <li>內容有沒有胡亂生成？</li>
+                                    <li>手機版有沒有跑版？</li>
+                                    <li>連結、圖片、按鈕能不能點？</li>
+                                    <li>這份作品真的像「你」嗎，還是只是 AI 範本？</li>
+                                </ul>
+                                <div class="question-box">一句很重要的提醒：<strong>AI 可以幫你加速交作業，但真正讓作品有靈魂的，還是你的選擇。</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content balanced-slide narrow-slide">
+                        <h3>6. 做完作品後，下一步是什麼？</h3>
+                        <div class="grid-3 feature-grid">
+                            <div class="card">
+                                <h4>README</h4>
+                                <p>讓 AI 幫你整理作品介紹、功能亮點與使用方法，但記得補上自己的想法。</p>
+                            </div>
+                            <div class="card">
+                                <h4>GitHub</h4>
+                                <p>把作品放到版本控制平台，留下你的學習軌跡，也方便未來修改。</p>
+                            </div>
+                            <div class="card">
+                                <h4>Deployment</h4>
+                                <p>可以用 GitHub Pages、Vercel 或 Netlify 讓同學、老師、朋友直接看到你的作品。</p>
+                            </div>
+                        </div>
+                        <div class="takeaway-bar">當作品能被別人看到，它就不再只是作業，而是你的第一個公開成果。</div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content balanced-slide narrow-slide">
+                        <h3>7. 未來地圖：你不用什麼都會，但要知道路在哪裡</h3>
+                        <div class="grid-3 feature-grid">
+                            <div class="card">
+                                <h4>RAG</h4>
+                                <p>先查資料再回答，降低 AI 幻覺。</p>
+                            </div>
+                            <div class="card">
+                                <h4>Agents</h4>
+                                <p>讓 AI 不只回答，還能幫你執行一連串任務。</p>
+                            </div>
+                            <div class="card">
+                                <h4>跨領域應用</h4>
+                                <p>設計、教育、醫療、工程、商業都在和 AI 結合。</p>
+                            </div>
+                        </div>
+                        <div class="thought-box">真正重要的不是追每一個新工具，而是培養三件事：<strong>提問能力、判斷能力、把想法做出來的能力。</strong></div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content narrow-slide">
+                        <h3>8. 這堂課想帶你記住的 5 件事</h3>
+                        <div class="grid-2">
+                            <div class="card">
+                                <ol class="list-tight">
+                                    <li><strong>AI 不只存在聊天機器人裡</strong>，它早就進入影像、語言、推薦、醫療與學習工具。</li>
+                                    <li><strong>AI 很強，但不等於永遠正確</strong>，所以你需要判斷與查證。</li>
+                                    <li><strong>會問問題的人，會比只會按按鈕的人更有優勢</strong>。</li>
+                                    <li><strong>生成式 AI 最適合拿來做草稿、找靈感、加快迭代</strong>，不是直接幫你代替思考。</li>
+                                    <li><strong>真正重要的能力</strong>，是把科技、創意、表達和判斷力放在一起。</li>
+                                </ol>
+                            </div>
+                            <div class="card">
+                                <div class="question-box">如果你今天只帶走一句話，希望是什麼？</div>
+                                <div class="mini-card"><strong>版本 A</strong><br>AI 是工具，不是答案。</div>
+                                <div class="mini-card" style="margin-top:12px;"><strong>版本 B</strong><br>懂得和 AI 合作的人，會比只會害怕 AI 的人走得更遠。</div>
+                                <div class="mini-card" style="margin-top:12px;"><strong>版本 C</strong><br>越是 AI 時代，越需要人的好奇、判斷與責任感。</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content balanced-slide narrow-slide">
+                        <h3>9. 課後想看什麼？這幾支比較長，但也更系統的帶你了解這領域的更多細節</h3>
+                        <p>可能比較生硬一點，但可以幫你建立更完整的概念，有助於未來的學習與探索。</p>
+                        <div class="resource-grid feature-grid">
+                            <div class="resource-card">
+                                <h4>類神經網路的真正計算方式</h4>
+                                <p>一個系列影集，讓你快速了解抽象得神經網路世界。</p>
+                                <a href="https://www.youtube.com/watch?v=aircAruvnKk&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi" target="_blank" rel="noopener noreferrer"> But what is a neural network? | Deep learning </a>
+                            </div>
+                            <div class="resource-card">
+                                <h4>ＡＩ對於批判性思考的影響</h4>
+                                <p>AI 對於批判性思考的影響，以及如何避免 AI 對於批判性思考的影響。</p>
+                                <a href="https://www.gq.com.tw/video/watch/shi-mo-shi-shen-wei-ji-shu-deepfake-er-zhe-xiang-ren-gong-zhi-hui-zhu-li-liao-jia-xin-wen-zeng-chang-ke-pu-chang-zhi-shi-gq-taiwan" target="_blank" rel="noopener noreferrer">How to Stop AI from Killing Your Critical Thinking | Advait Sarkar | TED</a>
+                            </div>
+                            <div class="resource-card">
+                                <h4>如何深度使用Vibe Coding 幫助你深度使用與增強工作效率</h4>
+                                <p>Vibe Coding 是一種深度使用AI的方式，幫助你深度使用與增強工作效率。</p>
+                                <a href="https://www.youtube.com/watch?v=2hbYCe_E5aU&list=PLWWZkn1dW3eAvSZfJv0-02q27JIsfbN2f" target="_blank" rel="noopener noreferrer">如何深度使用Vibe Coding 幫助你深度使用與增強工作效率</a>
+                            </div>
+                        </div>
+                        <div class="question-box">看完之後可以問自己：哪一支影片最讓你改變看法？是因為它講得清楚，還是因為它讓你開始懷疑原本以為理所當然的事？</div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="slide-content hero-slide closing-slide narrow-slide">
+                        <div class="closing-layout">
+                            <div class="closing-main">
+                                <div class="closing-overline">Closing Message</div>
+                                <div class="card closing-quote-card">
+                                    <p class="big-quote">AI 不一定會取代你，<br>但會用 AI、會判斷 AI、會和 AI 協作的人，<br>會更有選擇權。</p>
+                                </div>
+                                <div class="closing-rule"></div>
+                                <p class="closing-note">保持好奇，先做出第一版，再慢慢變強。真正重要的不是你會不會背所有名詞，而是你能不能開始理解、開始判斷、開始把想法做出來。</p>
+                            </div>
+
+                            <div class="closing-side">
+                                <div>
+                                    <div class="closing-panel-title">帶走這三件事</div>
+                                </div>
+                                <div class="closing-summary">
+                                    <div class="closing-summary-item">
+                                        <div class="closing-summary-index">01</div>
+                                        <div>
+                                            <strong>看得懂</strong>
+                                            <span>知道 AI 出現在什麼地方，理解它的影響力。</span>
+                                        </div>
+                                    </div>
+                                    <div class="closing-summary-item">
+                                        <div class="closing-summary-index">02</div>
+                                        <div>
+                                            <strong>判斷得出</strong>
+                                            <span>面對錯誤、偏見或假內容時，保有查證與思辨能力。</span>
+                                        </div>
+                                    </div>
+                                    <div class="closing-summary-item">
+                                        <div class="closing-summary-index">03</div>
+                                        <div>
+                                            <strong>做得出來</strong>
+                                            <span>把想法轉成專題、作品與真正能展示的成果。</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="closing-meta">AI Literacy / Judgment / Creation</div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -885,17 +2640,20 @@ Claude: "這是因為圖片路徑錯誤..."
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/reveal.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.0/plugin/highlight/highlight.min.js"></script>
     <script>
-        // Init
         Reveal.initialize({
             controls: true,
-            controlsLayout: 'bottom-right',
+            controlsLayout: "bottom-right",
             progress: true,
-            center: true,
+            slideNumber: "c/t",
+            center: false,
             hash: true,
-            width: 1280, height: 720,
-            margin: 0.04, minScale: 0.2, maxScale: 2.0,
-            transition: 'slide',
-            plugins: [ RevealHighlight ]
+            width: 1280,
+            height: 720,
+            margin: 0.025,
+            minScale: 0.2,
+            maxScale: 2.0,
+            transition: "slide",
+            plugins: [RevealHighlight]
         });
     </script>
 </body>
